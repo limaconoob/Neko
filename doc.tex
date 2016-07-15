@@ -1,7 +1,7 @@
-\documentclass{article}
+\documentclass[titlepage]{article}
 
 \newcommand{\name}{\textit{Arcana Azurea}}
-\newcommand{\program}{\textit{NEKO}}
+\newcommand{\program}{\textit{NEKO-Shell}}
 
 \usepackage[utf8]{inputenc}
 \usepackage[french]{babel}
@@ -26,34 +26,93 @@
     Ligatures = TeX
 ]{sazanami-gothic}
 
+\title{\Huge{NEKO-Shell}}
+\author{\textit{\Large{adjivas, brezaire, flime, limaconoob}}}
+\date{\today}
+
 \usetikzlibrary{shapes,arrows}
 \begin{document}
 
+\maketitle
+
+\newpage
 \tableofcontents
 
+\newpage
 \section{Préambule}
 
-Une nékoe est un personnage d'animé japonais avec des traits de chat
-\textendash{ mimikko
-	\footnote{ Kemonomimi ou mimikko est un personnage humain d'animé avec des caractéristiques animales tel que la personnalité ou encore le physique
-		\textendash{ 獣耳 } \textendash.
-			}} \textendash.
-
-Le GlyphArt est l'écriture d'une image via des caractères compris dans l'Unicode privé
-
-$\name$ est une programmeuse nékoe de fiction inventé pour assister des utilisateurs.
-
-\section{Introduction}
-
-$\program$ est un prompt nommé $\name$ et qui apportera les Arts, la Culture et son assistance a qui saura utiliser un shell.
-Humanisée d’émotions et fondée sur l'experience de la chambre chinoise, celle-ci sera donc instruite via des biblioteques.
-
-La liste des commandes est :
+Le terminal tel qu'on le connait est une interface riche en méthodes d'utilisations et en ressources. Cependant, nous remarquerons que cet environnement a quelques défauts :
 
 \begin{labeling}{Longer label\quad}
-	\item[\textbf{-m, --mount}] monte dynamiquement une biblioteques.
-	\item[\textbf{-c, --config, --configuration}] initialise le programme avec une nouvelle liste de biblioteques.
-	\item[\textbf{-e, --emotion}] change l'expression de $\name$.
+	\item[\textit{Pour les débutants}]: il n'est pas très accueillant et avec des implémentations souvent ésotériques, qui rendent son apprentissage déprimant et souvent fait à reculons. 
+	\item[\textit{Pour les avancés}]: les tâches sont récurrentes, certaines sont longues à implémenter et nécessite une observation de la documentation qui prend du temps.
+\end{labeling}
+
+Notre problématique sera donc de faciliter l'utilisation du terminal, ainsi que de lui donner esthétisme et fraîcheur.
+
+
+Nous utiliserons dans notre projet $\program$ une nékoe. C'est un personnage d'animé japonais d'apparence humaine avec des traits psychologiques et physiques du chat. On appelle aussi ce type de personnage une
+\textendash{ mimikko
+	\footnote{ Kemonomimi ou mimikko est un personnage humain d'animé avec des caractéristiques animales telles que la personnalité ou encore le physique
+		\textendash{ 獣耳 } \textendash.
+			}} \textendash.
+Elle sera créée sur support papier, puis utilisée grâce à la méthode du GlyphArt qui consiste en la réalisation d'une image par l'utilisation de caratères modifiés comme décrit dans Image2Font, programme de notre conception qui a pour but d'insérer des images dans une fonte pour pouvoir l'afficher dans un terminal.
+
+\newpage
+\section{Introduction}
+
+\subsection{$\name$}
+Le $\program$ est un progamme qui a pour objectif d'offrir une assistance personnalisée à l'utilisation du shell, en plus d'y apporter une approche artistique et culturelle. Cette assistance sera entièrement dirigée par notre nékoe conçue par nos soins et que nous avons nommé $\name$.
+
+Le caractère dynamique et vivant de notre nékoe sera retranscrit grâce à des émotions et des interactions avec l'utilisateur. L'implémentation du savoir d'$\name$ est fondée sur l'expérience de la chambre chinoise, celle-ci sera donc instruite par le biais de bibliotèques.
+
+\includegraphics[width=1\textwidth]{./1470px-Neko_Wikipe-tan.svg.png}
+
+\newpage
+\subsection{Builtin neko}
+Pour pouvoir communiquer directement avec $\name$, lui donner des instuctions particulières ou modifier les configurations de notre programme, l'utilisation d'une commande simple et accessible depuis le Shell s'est trouvé nécessaire. Ainsi, tout passera par la commande \textbf{neko}, suivis d'arguments (NOTE : METTRE UN LINK A LA PAGE DES LISTES DES ACTIONS).
+{\small\textit{Exemples:}
+
+\$> neko -e
+
+\$> neko bonjour}
+
+\bigskip
+\subsection{Gestion des paquets}
+L'utilisateur pourra utiliser notre progamme pour installer simplement et rapidement des paquets et les gérer. Ceux-ci seront soit disponibles par défaut avec le programme, soit pourront être créés de façon Libre par la communauté, de manière à améliorer le confort de l'utilisateur.
+Les paquets de langues par défauts seront, bien entendus le français et l'allemand. Cependant, d'autre langues, dialogues, interactions et assets visuels, pourront être ajoutés.
+
+\bigskip
+\newpage
+
+\section{Listes des actions d'$\name$}
+
+\subsection{Liste des options disponibles}
+
+\begin{labeling}{Longer label\quad}
+	\item[\textbf{-m, --mount}] monte dynamiquement une bibliotèque.
+	\item[\textbf{-c, --config, --configuration}]   initialise le programme avec une nouvelle liste de bibliotèques.
+	\item[\textbf{-e, --emotion} [émotion]] change l'émotion courante d'$\name$.
+	\item[\textbf{-i, --install} [packages ...]] installe un nouveau package.
+\end{labeling}
+
+\bigskip
+\subsection{Liste des interactions disponibles}
+
+\begin{labeling}{Longer label\quad}
+	\item[\textbf{bonjour}] $\name$ salue l'utilisateur.
+	\item[\textbf{quitte}] $\name$ souhaite une bonne nuit à l'utilisateur puis le programme se termine proprement.
+	\item[\textbf{mange}] lance l'action de nutrition d'$\name$
+	\item[\textbf{joue}] $\name$ joue avec sa pelotte de laine.
+\end{labeling}
+
+\bigskip
+\subsection{Liste des émotions disponibles}
+
+\begin{labeling}{Longer label\quad}
+	\item[\textbf{contente}] $\name$ retrouve le sourire.
+	\item[\textbf{colère}] $\name$ s'énerve.
+	\item[\textbf{surprise}] $\name$ est surprise.
 \end{labeling}
 
 \begin{dot2tex}[neato,mathmode]
