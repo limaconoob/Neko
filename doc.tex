@@ -1,36 +1,66 @@
-\documentclass[french]{article}
+\documentclass{article}
 
-\newcommand{\name}{\textit{Arcana}}
+\newcommand{\name}{\textit{Arcana Azurea}}
 \newcommand{\program}{\textit{NEKO}}
 
 \usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{xeCJK}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
+\usepackage{fontspec}
 \usepackage[a4paper]{geometry}
-\usepackage{babel}
 \usepackage{scrextend}
+\usepackage[]{dot2texi}
+\usepackage{tikz}
+
+\setCJKmainfont[
+    Path = fonts/sazanami-neko/,
+    Extension = .ttf,
+    Ligatures = TeX
+]{sazanami-mincho}
+
+\setCJKsansfont[
+    Path = fonts/sazanami-neko/,
+    Extension = .ttf,
+    Ligatures = TeX
+]{sazanami-gothic}
+
+\usetikzlibrary{shapes,arrows}
 \begin{document}
 
 \tableofcontents
 
 \section{Préambule}
 
-Une nékoe est-un caractère d'animé japonais avec des traits de chat -mimikko-.
+Une nékoe est un personnage d'animé japonais avec des traits de chat
+\textendash{ mimikko
+	\footnote{ Kemonomimi ou mimikko est un personnage humain d'animé avec des caractéristiques animales tel que la personnalité ou encore le physique
+		\textendash{ 獣耳 } \textendash.
+			}} \textendash.
 
-\addcontentsline{toc}{section}{Unnumbered Section Préambule}
+Le GlyphArt est l'écriture d'une image via des caractères compris dans l'Unicode privé
+
+$\name$ est une programmeuse nékoe de fiction inventé pour assister des utilisateurs.
 
 \section{Introduction}
 
-$\program$ est-un prompt nommée $\name$ et qui apportera les Arts, la Culture et son assistance a qui saura utiliser un shell.
-Humanisée d’émotion et fondé sur l’experience de la chambre chinoise, celle-si sera donc instruite via des biblioteques.
+$\program$ est un prompt nommé $\name$ et qui apportera les Arts, la Culture et son assistance a qui saura utiliser un shell.
+Humanisée d’émotions et fondée sur l'experience de la chambre chinoise, celle-ci sera donc instruite via des biblioteques.
 
 La liste des commandes est :
 
 \begin{labeling}{Longer label\quad}
-\item[Mount] monte dynamique une biblioteques.
-\item[Emotion] change l'expression de $\name$.
+	\item[\textbf{-m, --mount}] monte dynamiquement une biblioteques.
+	\item[\textbf{-c, --config, --configuration}] initialise le programme avec une nouvelle liste de biblioteques.
+	\item[\textbf{-e, --emotion}] change l'expression de $\name$.
 \end{labeling}
 
-\addcontentsline{toc}{section}{Unnumbered Section Introduction}
+\begin{dot2tex}[neato,mathmode]
+digraph G {
+	node [shape="circle"];
+	a_1 -> a_2 -> a_3 -> a_4 -> a_1;
+}
+\end{dot2tex}
 
 \end{document}
