@@ -1,0 +1,32 @@
+LOG  ---------------------  Meine eigenen Builtins  -----------------------  LOG
+
+
+NAME
+	 log -- Information über die vergangene Logs
+
+SYNOPSIS
+	 log [Log_Name ...]
+
+BESCHREIBUNG
+	 Geben wenig Information über die vergangene Logs
+
+BEISPIELE
+	 $> log
+	  	cd -
+		ls
+		cd work42
+		log
+	 $> log cd
+	  	cd |
+		cd | work42
+	 $> log log cd
+	  	log:
+	  	log |
+		log | log cd
+
+		cd:
+		cd |
+		cd | work42
+
+
+LOG  ---------------------  Meine eigenen Builtins  -----------------------  LOG

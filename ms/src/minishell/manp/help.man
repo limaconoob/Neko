@@ -1,0 +1,14 @@
+HELP  --------------------  Meine eigenen Builtins  ----------------------  HELP
+
+
+NAME
+	 help -- Zeigt ein Hilfnachricht
+
+SYNOPSIS
+	 help
+
+BESCHREIBUNG
+	 Zeigt ein Hilfnachricht über den Shell und ihres eigenes Builtins
+
+
+HELP  --------------------  Meine eigenen Builtins  ----------------------  HELP

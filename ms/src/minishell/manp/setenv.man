@@ -1,0 +1,27 @@
+SETENV  ------------------  Meine eigenen Builtins  --------------------  SETENV
+
+
+NAME
+	 setenv -- Hinzufügt ein neuer Environment
+
+SYNOPSIS
+	 setenv [env_name]=[value]
+
+BESCHREIBUNG
+	 Hinzufügt ein neuer Environment in die aktuelle Environmentliste.
+
+BEISPIELE
+	 $> env
+	 	.
+		.
+	 $> setenv Bonjour=42
+	 $> env
+	 	.
+		.
+	 	Bonjour=42
+
+SUCH AUCH
+	 unsetenv, env
+
+
+SETENV  ------------------  Meine eigenen Builtins  --------------------  SETENV

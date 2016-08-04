@@ -1,0 +1,20 @@
+FT_CAT  ------------------  Meine eigenen Builtins  --------------------  FT_CAT
+
+
+NAME
+	 ft_cat -- Zeigt des Inhalt eine Datei
+
+SYNOPSIS
+	 ft_cat [file ...]
+
+BESCHREIBUNG
+	 Zeigt des Inhalt eine Datei.
+
+BEISPIELE
+	 $> cat bonjour.txt
+	  	Hallo Leute!
+	 $> cat salut
+	  	ft_cat: salut: Keine Datei oder das Zugang ist verboten
+
+
+FT_CAT  ------------------  Meine eigenen Builtins  --------------------  FT_CAT

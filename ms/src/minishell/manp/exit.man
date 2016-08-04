@@ -1,0 +1,17 @@
+EXIT  --------------------  Meine eigenen Builtins  ----------------------  EXIT
+
+
+NAME
+	 exit -- Verlässt das Shell
+
+SYNOPSIS
+	 exit
+
+BESCHREIBUNG
+	 Verlässt das aktuelle Shell.
+
+BEISPIELE
+	 $> exit
+
+
+EXIT  --------------------  Meine eigenen Builtins  ----------------------  EXIT

@@ -1,0 +1,17 @@
+CLEAR  -------------------  Meine eigenen Builtins  ---------------------  CLEAR
+
+
+NAME
+	 clear -- Reinigt den Bildschrimm
+
+SYNOPSIS
+	 clear
+
+BESCHREIBUNG
+	 Reinigt den Bildschrimm
+
+BEISPIELE
+	 $> clear
+
+
+CLEAR  -------------------  Meine eigenen Builtins  ---------------------  CLEAR

@@ -1,0 +1,25 @@
+FT_GREP  -----------------  Meine eigenen Builtins  -------------------  FT_GREP
+
+
+NAME
+	 ft_grep -- Sucht ein Patternwort in eine Datei
+
+SYNOPSIS
+	 ft_grep [Pattern] [file ...]
+
+BESCHREIBUNG
+	 Sucht ein Patternwort in eine Datei, dann der Satz in dem es war 
+	 gefunden zeigt.
+
+BEISPIELE
+	 $> ft_grep if renv.c
+	 	renv.c:	if (!ft_strcmp((*stock)->env_name, "_"))
+	 	renv.c:	if (!envp || !(*envp))
+	 	renv.c:		if (*env)
+	 $> ft_grep bonjour renv.c
+	  	bonjour: Kein Patternwort gefunden
+	 $> ft_grep if bonjour
+	  	bonjour: Kein Datei oder das Zugang ist verboten
+
+
+FT_GREP  -----------------  Meine eigenen Builtins  -------------------  FT_GREP

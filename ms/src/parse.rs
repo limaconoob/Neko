@@ -7,6 +7,14 @@ use event::Key;
 //      _ => bonjour.push(format!("{:?}", i).chars().nth(1).unwrap_or_default()), }; }
 
 ///ft_concat
+pub fn ft_concat(buf: Key) -> char
+{ let mut finder: String = String::from(format!("{:?}", buf));
+  for k in finder.chars().enumerate()
+  { if k.0 == 6 && k.1 != '\\'
+    { return k.1; }}
+  'a' }
+/*
+///ft_concat
 pub fn ft_concat(buf: Vec<Key>) -> String
 { let mut finder: Vec<String> = Vec::new();
   let mut bonjour: String = String::new();
@@ -17,7 +25,7 @@ pub fn ft_concat(buf: Vec<Key>) -> String
     { if j.0 == 6 && j.1 != '\\'
       { bonjour.push(j.1); }}}
   bonjour }
-
+*/
 ///split_spaces
 pub fn split_spaces(line: String) -> Vec<String>
 { let bonjour = line.split_whitespace().collect::<Vec<&str>>();
@@ -27,7 +35,7 @@ pub fn split_spaces(line: String) -> Vec<String>
     for j in i.chars()
     { coucou.push(j); }
     connard.push(coucou); }
- connard }
+  connard }
 
 ///remove_spaces
 pub fn remove_spaces<'a>(input: &'a str)-> Cow<'a, str>

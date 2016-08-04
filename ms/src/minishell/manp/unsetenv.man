@@ -1,0 +1,27 @@
+UNSETENV  ----------------  Meine eigenen Builtins  ------------------  UNSETENV
+
+
+NAME
+	 unsetenv -- Zerstört ein Environment
+
+SYNOPSIS
+	 unsetenv [env_name]
+
+BESCHREIBUNG
+	 Zerstört ein Environment in die aktuelle Environmentliste.
+
+BEISPIELE
+	 $> env
+	 	.
+	 	Bonjour=42
+		.
+	 $> unsetenv Bonjour
+	 $> env
+	 	.
+		.
+
+SUCH AUCH
+	 setenv, env
+
+
+UNSETENV  ----------------  Meine eigenen Builtins  ------------------  UNSETENV

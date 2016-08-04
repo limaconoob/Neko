@@ -1,0 +1,21 @@
+PWD  ---------------------  Meine eigenen Builtins  -----------------------  PWD
+
+
+NAME
+	 pwd -- Anzeigt das Aktuellordnername
+
+SYNOPSIS
+	 pwd
+
+BESCHREIBUNG
+	 Anzeigt das Aktuellordnername.
+
+BEISPIELE
+	 $> pwd
+	 	/nfs/2015/j/jpepin
+
+SUCH AUCH
+	 cd
+
+
+PWD  ---------------------  Meine eigenen Builtins  -----------------------  PWD

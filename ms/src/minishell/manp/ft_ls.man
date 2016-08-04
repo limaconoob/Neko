@@ -1,0 +1,46 @@
+FT_LS  -------------------  Meine eigenen Builtins  ---------------------  FT_LS
+
+
+NAME
+	 ft_ls -- Zeigt die Inhalt des aktuelles Ordner
+
+SYNOPSIS
+	 ft_ls [-Option] [Datei ... | Ordner ...]
+
+BESCHREIBUNG
+	 Zeigt die Dateien, dass das Aktuellordner inhaltet.
+
+OPTIONEN
+	 1   : Nichts tun
+	 R   : Zeigt alle den Unterordner mit rekursiv
+	 a   : Zeigt alle Verstecktdatei (Name anfangt mit ".")
+	 l   : Zeigt wenige Information über jeder Dateien
+	 t   : Geordnet Dateien nach Zeit
+
+BEISPIELE
+	 $> ft_ls
+	  	Datei1.c
+		Datei2
+		Ordner
+	 $> ft_ls -a
+	  	.
+		..
+		.Datei1.c.swp
+	  	Datei1.c
+		Datei2
+		Ordner
+	 $> ft_ls -l
+	  	total 8
+	  	-rw-r--r--  1 jpepin  2015_paris       0 May 19 17:03 Datei1.c
+	  	-rw-r--r--  1 jpepin  2015_paris       0 May 19 17:03 Datei2
+	  	drwxr-xr-x  2 jpepin  2015_paris    4096 May 19 17:03 Ordner
+	 $> ft_ls -R
+	  	Datei1.c
+	  	Datei2
+	  	Ordner
+
+	  	./Ordner:
+	  	Datei3
+
+
+FT_LS  -------------------  Meine eigenen Builtins  ---------------------  FT_LS

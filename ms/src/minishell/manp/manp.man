@@ -1,0 +1,21 @@
+MANP  --------------------  Meine eigenen Builtins  ----------------------  MANP
+
+
+NAME
+	 manp -- Zeigt des Benutzung eine Anweisung
+
+SYNOPSIS
+	 manp [Anweisung ...]
+
+BESCHREIBUNG
+	 Zeigt des Informationen eine Anweisung : 
+	 ¤ Die Name;
+	 ¤ Die Benutzung;
+	 ¤ Eine kleine Beschreibung;
+	 ¤ Die Optionenliste, wenn ein bist;
+	 ¤ Einige Beispielen über wie einige man kann es benutzen
+		und zeigt die Normalrückkehranzeigen;
+	 ¤ Einige ähnliche Anweisungen, wenn es gibt;
+
+
+MANP  --------------------  Meine eigenen Builtins  ----------------------  MANP

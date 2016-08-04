@@ -1,0 +1,27 @@
+CD  ----------------------  Meine eigenen Builtins  ------------------------  CD
+
+
+NAME
+	 cd -- Ändert das aktuell Ordner
+
+SYNOPSIS
+	 cd [Option | Ordner]
+
+BESCHREIBUNG
+	 Ändert das aktuell Ordner.
+
+OPTIONEN
+	 ~   : Geht zu des Wertes das HOME Environmentvariable
+	     : Geht zu des Wertes das HOME Environmentvariable
+	 -   : Geht zu des Wertes das OLDPWD Environmentvariable (Letzte Ordner)
+
+BEISPIELE
+	 $> cd rust/
+	 $> cd ..
+	 $> cd ~
+
+SUCH AUCH
+	 pwd
+
+
+CD  ----------------------  Meine eigenen Builtins  ------------------------  CD
