@@ -24,7 +24,7 @@ fn main()
    { let tmp = command_line(); 
      print!("\n\r");
      for i in tmp
-     { if i == "c"
+     { if i == "exit"
          {return} ;
        print!("[{}] ", i); }
      print!("\n\r"); }}

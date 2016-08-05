@@ -1,7 +1,7 @@
 ///parse
 
 use std::borrow::Cow;
-use event::Key;
+use termion::event::Key;
 
 ///ft_concat
 pub fn ft_concat(buf: Vec<char>) -> String

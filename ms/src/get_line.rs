@@ -6,7 +6,7 @@ use termion::event::Key;
 use termion::cursor::{Left,Right,Up};
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
-use termion::parse::{ft_concat,split_spaces};
+use parse::{split_spaces,ft_concat};
 use std::fmt;
 
 trait Bonjour
