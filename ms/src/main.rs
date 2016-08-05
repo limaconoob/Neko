@@ -22,7 +22,7 @@ fn main()
 //     i+=1; }
    loop
    { let tmp = command_line(); 
-     print!("\t\t");
+     print!("\n\r");
      for i in tmp
      { if i == "c"
          {return} ;
