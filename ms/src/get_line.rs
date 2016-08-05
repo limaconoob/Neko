@@ -1,15 +1,12 @@
-///bonjour
+///non
 
 use std::io::{stdout, stdin, self};
 use std::io::prelude::*;
-use event::Key;
-use cursor::Left;
-use cursor::Right;
-use cursor::Up;
-use input::TermRead;
-use raw::IntoRawMode;
-use parse::ft_concat;
-use parse::split_spaces;
+use termion::event::Key;
+use termion::cursor::{Left,Right,Up};
+use termion::input::TermRead;
+use termion::raw::IntoRawMode;
+use termion::parse::{ft_concat,split_spaces};
 use std::fmt;
 
 /*  let mut buf = [0; 9]; 
@@ -19,9 +16,6 @@ use std::fmt;
   { coucou.push(i as char); }
   coucou }
 */
-impl fmt::Display for Key
-{ fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result 
-  { write!(f, "{}", self) }}
 
 //  let term: Term = Term{line: String::new(), curs_x: 11, curs_y: cursor_position()};
 //  println!("{}, {}", term.curs_x, term.curs_y);
@@ -113,8 +107,8 @@ pub fn command_line() -> Vec<String>
     //  Key::Alt(b) && Key::Down => print!("{}", Down(1)),
       Key::Alt(b) => print!("^{}", b),
       Key::Ctrl(b) => print!("*{}", b),
-      Key::Left => move_it(0, term, buf),
-      Key::Right => move_it(1, term, buf),
+//      Key::Left => move_it(0, term, buf),
+//      Key::Right => move_it(1, term, buf),
     //  Key::Up => get_history(3),
     //  Key::Down => get_history(4),
     //  Key::Backspace => del_char(),
