@@ -3,6 +3,7 @@
 use std::io::{Error, ErrorKind};
 use std::ascii::AsciiExt;
 use std::str;
+use std::fmt;
 
 /// An event reported by the terminal.
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
@@ -91,6 +92,10 @@ pub enum Key {
     #[doc(hidden)]
     __IsNotComplete
 }
+
+impl fmt::Display for Key
+{ fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result
+      { write!(f, "{}", self) }}
 
 /// Parse an Event from `item` and possibly subsequent bytes through `iter`.
 pub fn parse_event<I>(item: Result<u8, Error>, iter: &mut I) -> Result<Event, Error>
