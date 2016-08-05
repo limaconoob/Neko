@@ -26,45 +26,61 @@ impl<R: Read> Bonjour for R
   let string = try!(String::from_utf8(buf).map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e)));
   Ok(Some(string)) }}
 
-pub fn cursor_position() -> (u8, u8)
-{ let stdout = stdout();
-  let stdin = stdin();
-  let mut stdin = stdin.lock();
-  let mut stdout = stdout.lock();
-  print!("\x1B[6n\n");
-  let connard = stdin.read_pos(&mut stdout);
-  let mut x: u8 = 0;
-  let mut y: u8 = 0;
-  let mut flag = 0;
-  if let Ok(Some(connard)) = connard
-  {
-  for i in connard.chars()
-  { if flag == 0 && i == '['
-    { flag = 1; }
-    else if flag == 1 && i != ';'
-    { y = (y * 10) + (i as u8 - 48); }
-    else if flag == 1
-    { flag = 2; }
-    else if flag == 2 && i != 'R'
-    { x = (x * 10) + (i as u8 - 48); }
-    else if flag == 2
-    { flag = 3; }}
-  (x, y) }
-  else
-  { (0, 0) }}
-
 ///structure pour conserver l'état de l'édition de ligne
-pub struct Term
+struct Term
 { line: Vec<String>,
   prompt: String,
   curs_x: u8,
   curs_y: u8,
   begin_x: u8,
-  begin_y: u8, }
+  begin_y: u8,
+  term_x: u8,
+  term_y: u8, }
 
-fn move_it(way: u8, term: &mut Term, size: u8)
-{ //println!("TERM! curs_x::{}, curs_y::{}, begin_x::{}, size::{}", term.curs_x, term.curs_y, term.begin_x, size);
-  if way == 0
+trait TermInfo
+{ fn cursor_position(&self) -> (u8, u8); }
+
+impl Term
+{ fn new(prompt: String) -> Self
+  { Term
+    { line: Vec::new(),
+      prompt: prompt,
+      curs_x: 0,
+      curs_y: 0,
+      begin_x: 0,
+      begin_y: 0,
+      term_x: 0,
+      term_y: 0, }}}
+
+impl TermInfo for Term
+{ fn cursor_position(&self) -> (u8, u8)
+  { let stdout = stdout();
+    let stdin = stdin();
+    let mut stdin = stdin.lock();
+    let mut stdout = stdout.lock();
+    print!("\x1B[6n\n");
+    let connard = stdin.read_pos(&mut stdout);
+    let mut x: u8 = 0;
+    let mut y: u8 = 0;
+    let mut flag = 0;
+    if let Ok(Some(connard)) = connard
+    { for i in connard.chars()
+      { if flag == 0 && i == '['
+        { flag = 1; }
+        else if flag == 1 && i != ';'
+        { y = (y * 10) + (i as u8 - 48); }
+        else if flag == 1
+        { flag = 2; }
+        else if flag == 2 && i != 'R'
+        { x = (x * 10) + (i as u8 - 48); }
+        else if flag == 2
+        { flag = 3; }}
+      (x, y) }
+      else
+      { (0, 0) }}}
+
+fn move_it(way: u8)
+{ if way == 0
   { print!("{}", Left(1)); }
   else if way == 1
   { print!("{}", Right(1)); }}
@@ -81,8 +97,13 @@ pub fn command_line() -> Vec<String>
   let mut stdout = stdout.lock();
   let mut stdin = stdin();
   print!("jpepin $> ");
-  let coord = cursor_position();
-  let ref mut term: Term = Term{line: Vec::new(), prompt: String::from("jpepin $> "), curs_x: coord.0, curs_y: coord.1, begin_x: coord.0, begin_y: coord.1};
+  let ref mut term: Term = Term::new(String::from("jpepin $> "));
+  let coord = term.cursor_position();
+  term.curs_x = coord.0;
+  term.curs_y = coord.1;
+  term.begin_x = coord.0;
+  term.begin_y = coord.1;
+//  let ref mut term: Term = Term{line: Vec::new(), prompt: String::from("jpepin $> "), curs_x: coord.0, curs_y: coord.1, begin_x: coord.0, begin_y: coord.1};
   stdout.flush().unwrap();
   print!("{}{}", Up(1), Right(term.prompt.len() as u16));
   stdout.flush().unwrap();
@@ -110,14 +131,14 @@ pub fn command_line() -> Vec<String>
                           print!("*{}", b) },
       Key::Left =>      if term.curs_x > term.begin_x
                         { term.curs_x -= 1;
-                          move_it(0, term, size) },
+                          move_it(0) },
       Key::Right =>     if term.curs_x < size + term.begin_x
                         { term.curs_x += 1;
-                          move_it(1, term, size) },
+                          move_it(1) },
       Key::Backspace => if size > 0 && term.curs_x > term.begin_x
                         { size -= 1;
                           term.curs_x -= 1;
-                          move_it(0, term, size);
+                          move_it(0);
                           buf.remove((term.curs_x - term.begin_x) as usize);
                           let mut u: Vec<_> = buf.drain(((term.curs_x - term.begin_x) as usize)..).collect();
                           let mut j = u.clone();
@@ -128,7 +149,7 @@ pub fn command_line() -> Vec<String>
                           buf.append(&mut j);
                           print!(" ");
                           move_to((taille as i16) * -1);
-                          move_it(0, term, size) },
+                          move_it(0) },
     //  Key::Up => get_history(3),
     //  Key::Down => get_history(4),
       _ => {}, };
