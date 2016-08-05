@@ -9,10 +9,6 @@ use termion::raw::IntoRawMode;
 use termion::parse::{ft_concat,split_spaces};
 use std::fmt;
 
-impl fmt::Display for Key
-{ fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result 
-  { write!(f, "{}", self) }}
-
 trait Bonjour
 { fn curs_pos(&mut self) -> io::Result<Option<String>>;
   fn read_pos<W: Write>(&mut self, writer: &mut W) -> io::Result<Option<String>>
