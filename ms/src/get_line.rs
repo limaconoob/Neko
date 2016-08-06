@@ -3,11 +3,11 @@
 use std::io::{stdout, stdin, self};
 use std::io::prelude::*;
 use termion::event::Key;
-use termion::cursor::{Left,Right,Up};
+use termion::cursor::{Left,Right,Up,Down,Goto};
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
+use termion::terminal_size;
 use parse::{split_spaces,ft_concat};
-use std::fmt;
 
 trait Bonjour
 { fn curs_pos(&mut self) -> io::Result<Option<String>>;
@@ -28,56 +28,89 @@ impl<R: Read> Bonjour for R
 
 ///structure pour conserver l'état de l'édition de ligne
 struct Term
-{ line: Vec<String>,
-  prompt: String,
-  curs_x: u8,
-  curs_y: u8,
-  begin_x: u8,
-  begin_y: u8,
-  term_x: u8,
-  term_y: u8, }
+{ curs_x: u16,
+  curs_y: u16,
+  begin_x: u16,
+  begin_y: u16,
+  term_x: u16,
+  term_y: u16, }
 
 trait TermInfo
-{ fn cursor_position(&self) -> (u8, u8); }
+{ fn cursor_position(&self) -> io::Result<(u16, u16)>;
+  fn go_to_curs(&self); }
 
 impl Term
-{ fn new(prompt: String) -> Self
+{ fn new(size: (u16, u16)) -> Self
   { Term
-    { line: Vec::new(),
-      prompt: prompt,
-      curs_x: 0,
+    { curs_x: 0,
       curs_y: 0,
       begin_x: 0,
       begin_y: 0,
-      term_x: 0,
-      term_y: 0, }}}
+      term_x: size.0,
+      term_y: size.1, }}}
 
 impl TermInfo for Term
-{ fn cursor_position(&self) -> (u8, u8)
+{ fn cursor_position(&self) -> io::Result<(u16, u16)>
   { let stdout = stdout();
     let stdin = stdin();
     let mut stdin = stdin.lock();
     let mut stdout = stdout.lock();
     print!("\x1B[6n\n");
     let connard = stdin.read_pos(&mut stdout);
-    let mut x: u8 = 0;
-    let mut y: u8 = 0;
+    let mut x: u16 = 0;
+    let mut y: u16 = 0;
     let mut flag = 0;
     if let Ok(Some(connard)) = connard
     { for i in connard.chars()
       { if flag == 0 && i == '['
         { flag = 1; }
         else if flag == 1 && i != ';'
-        { y = (y * 10) + (i as u8 - 48); }
+        { y = (y * 10) + (i as u16 - 48); }
         else if flag == 1
         { flag = 2; }
         else if flag == 2 && i != 'R'
-        { x = (x * 10) + (i as u8 - 48); }
+        { x = (x * 10) + (i as u16 - 48); }
         else if flag == 2
         { flag = 3; }}
-      (x, y) }
+      Ok((x, y)) }
       else
-      { (0, 0) }}}
+      { Ok((0, 0)) }}
+  fn go_to_curs(&self)
+  { print!("{}", Goto(self.curs_x, self.curs_y)); }}
+
+struct Neko
+{ //image: Vec<Vec<char>>,
+  tmp_char: u8,
+  coord: (u16, u16),
+  size: (u16, u16),
+  term: (u16, u16), }
+
+trait NekoInfo
+{ fn display(&self);
+  fn switch(&mut self); }
+  //fn drag_and_drop(&self); }
+
+impl Neko
+{ fn new(coord: (u16, u16), size: (u16, u16), c: char, term: (u16, u16)) -> Self
+  { print!("{}\n{}{}{}{}\n{}{}{}{}\n{}{}{}", Goto(coord.0, coord.1), c, c, c, Goto(coord.0, coord.1 + 1), c, c, c, Goto(coord.0, coord.1 + 2), c, c, c);
+    Neko
+    { coord: coord,
+      size: size,
+      tmp_char: c as u8,
+      term: term, }}}
+
+impl NekoInfo for Neko
+{ fn display(&self)
+  { let mut i = 0;
+    while i < self.size.1 && self.coord.1 + i < self.term.1
+    { print!("{}", Goto(self.coord.0, self.coord.1 + i + 1));
+      i += 1;
+      let mut j = 0;
+      while j < self.size.0
+      { j += 1;
+        print!("{}", self.tmp_char as char); }}}
+  fn switch(&mut self)
+  { self.tmp_char += 1; }}
 
 fn move_it(way: u8)
 { if way == 0
@@ -95,17 +128,19 @@ fn move_to(way: i16)
 pub fn command_line() -> Vec<String>
 { let stdout = stdout();
   let mut stdout = stdout.lock();
-  let mut stdin = stdin();
-  print!("jpepin $> ");
-  let ref mut term: Term = Term::new(String::from("jpepin $> "));
-  let coord = term.cursor_position();
-  term.curs_x = coord.0;
-  term.curs_y = coord.1;
-  term.begin_x = coord.0;
-  term.begin_y = coord.1;
-//  let ref mut term: Term = Term{line: Vec::new(), prompt: String::from("jpepin $> "), curs_x: coord.0, curs_y: coord.1, begin_x: coord.0, begin_y: coord.1};
+  let stdin = stdin();
+  let t_size = terminal_size().unwrap();
+  let ref mut term: Term = Term::new(t_size);
+  let coord = term.cursor_position().unwrap();
+  let size = (3, 3);
+  let ref mut neko: Neko = Neko::new(coord, size, '@', t_size);
+  term.curs_x = coord.0 + size.0 + 1;
+  term.curs_y = coord.1 + 1;
+  term.begin_x = coord.0 + size.0 + 1;
+  term.begin_y = coord.1 + 1;
   stdout.flush().unwrap();
-  print!("{}{}", Up(1), Right(term.prompt.len() as u16));
+  print!("{}{}", Up(1), Right(size.0));
+  term.go_to_curs();
   stdout.flush().unwrap();
   let mut stdout = stdout.into_raw_mode().unwrap();
   let mut buf: Vec<char> = Vec::new();
@@ -140,10 +175,9 @@ pub fn command_line() -> Vec<String>
                           term.curs_x -= 1;
                           move_it(0);
                           buf.remove((term.curs_x - term.begin_x) as usize);
-                          let mut u: Vec<_> = buf.drain(((term.curs_x - term.begin_x) as usize)..).collect();
+                          let ref mut u: Vec<_> = buf.drain(((term.curs_x - term.begin_x) as usize)..).collect();
                           let mut j = u.clone();
                           let taille = u.len();
-                       //   print!("taille::{}", (taille as i16) * -1);
                           for i in u
                           { print!("{}", i); }
                           buf.append(&mut j);
@@ -153,6 +187,13 @@ pub fn command_line() -> Vec<String>
     //  Key::Up => get_history(3),
     //  Key::Down => get_history(4),
       _ => {}, };
+    neko.switch();
+    neko.display();
+    term.go_to_curs();
     stdout.flush().unwrap(); }
-  //println!("\n\rbegin_x::{}, size::{}", term.begin_x, size);
+   print!("\r   {}\r   {}\r   {}\r   \n", Down(1), Down(1), Down(1));
+   if term.curs_y + neko.size.1 < term.term_y
+   { print!("{}", Up(4)); }
+   else
+   { print!("{}", Up(3)); }
   split_spaces(ft_concat(buf)) }

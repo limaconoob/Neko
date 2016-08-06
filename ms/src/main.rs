@@ -22,9 +22,8 @@ fn main()
 //     i+=1; }
    loop
    { let tmp = command_line(); 
-     print!("\n\r");
+    // print!("\n\r");
      for i in tmp
      { if i == "exit"
-         {return} ;
-       print!("[{}] ", i); }
-     print!("\n\r"); }}
+         {return} ; }
+     print!("\r"); }}

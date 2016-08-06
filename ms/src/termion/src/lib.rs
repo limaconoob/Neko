@@ -17,11 +17,6 @@ pub use size::terminal_size;
 mod tty;
 pub use tty::is_tty;
 
-///parse
-pub mod parse;
-pub use parse::remove_spaces;
-//pub use parse::split_spaces;
-
 #[macro_use]
 mod macros;
 pub mod clear;
