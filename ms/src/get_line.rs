@@ -95,7 +95,7 @@ impl Neko
     { print!("{}", Goto(coord.0, coord.1 + i + 1));
       i += 1;
       let mut j = 0;
-      while j < size.0
+      while j < size.0 && j + coord.0 <= term.0
       { j += 1;
         print!("{}", c); }}
     Neko
@@ -132,13 +132,9 @@ impl NekoInfo for Neko
     { print!("{}", Goto(self.coord.0, self.coord.1 + i + 1));
       i += 1;
       print!("{}{}", eraser, Down(1)); }
-    if self.coord.1 + self.size.1 < self.term.1
-    { if self.event == Event::Key(Key::Char('\n'))
-      { println!(""); }}
-    else
-    { if self.event == Event::Key(Key::Char('\n'))
-      { println!("{}", Down(1)); }}
-    print!("{}", Up(self.size.1 + 1)); }}
+  if self.coord.1 + self.size.1 == self.term.1
+  { println!(""); }
+    print!("{}", Up(self.size.1)); }}
 
 fn move_it(way: u8)
 { if way == 0
@@ -163,11 +159,11 @@ pub fn command_line() -> Vec<String>
   let size = (8, 5);
   let ref mut neko: Neko = Neko::new(coord, size, '!', t_size);
   term.curs_x = coord.0 + size.0 + 1;
-  term.curs_y = coord.1 + 1;
+  term.curs_y = coord.1 + size.1;
   term.begin_x = coord.0 + size.0 + 1;
-  term.begin_y = coord.1 + 1;
+  term.begin_y = coord.1 + size.1;
   stdout.flush().unwrap();
-  print!("{}{}", Up(1), Right(size.0));
+  print!("{}{}", Right(size.0), Down(size.1));
   term.go_to_curs();
   stdout.flush().unwrap();
   let mut stdout = MouseTerminal::from(stdout.into_raw_mode().unwrap());
@@ -177,8 +173,8 @@ pub fn command_line() -> Vec<String>
   { let b = c.unwrap();
     neko.event = b;
     match b
-    { Event::Key(Key::Char('\n')) =>  break,
-      Event::Key(Key::Char('\0')) =>  break,
+    { Event::Key(Key::Char('\n')) => break,
+      Event::Key(Key::Char('\0')) => break,
       Event::Key(Key::Char(b)) => { term.curs_x += 1;
                           size += 1;
                           buf.push(b);
