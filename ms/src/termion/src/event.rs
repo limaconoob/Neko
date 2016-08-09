@@ -20,14 +20,26 @@ pub enum Event {
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum MouseEvent {
     /// A mouse button was pressed.
-    ///
     /// The coordinates are one-based.
+    ///
+    /// Ein Mousetaste gedrückt ist.
+    /// Un bouton de souris est appuyé
     Press(MouseButton, u16, u16),
+
     /// A mouse button was released.
-    ///
     /// The coordinates are one-based.
+    ///
+    /// Ein Mousetaste losgelassen ist.
+    /// Un bouton de souris est relâché
     Release(u16, u16),
-}
+/*
+    /// A mouse button is held down.
+    /// The coordinates are one-based.
+    ///
+    /// Ein Mousetaste gedrückt gehalten ist.
+    /// Un bouton de souris est maintenu appuyé
+    //Drag(MouseButton, u16, u16),
+*/}
 
 /// A mouse button.
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
@@ -46,6 +58,38 @@ pub enum MouseButton {
     ///
     /// This event is typically only used with Mouse::Press.
     WheelDown,
+    
+            // AJOUTS D'EVENTS
+    LeftDrag,
+    WheelDrag,
+    RightDrag,
+
+    ShiftLeft,
+    ShiftMid,
+    ShiftRight,
+
+    ShiftLeftDrag,
+    ShiftMidDrag,
+    ShiftRightDrag,
+
+    CtrlLeft,
+    CtrlMid,
+    CtrlRight,
+
+    CtrlLeftDrag,
+    CtrlMidDrag,
+    CtrlRightDrag,
+    CtrlWheelUp,
+    CtrlWheelDown,
+
+    ShiftCtrlLeft,
+    ShiftCtrlMid,
+    ShiftCtrlRight,
+
+    ShiftCtrlLeftDrag,
+    ShiftCtrlMidDrag,
+    ShiftCtrlRightDrag,
+            // AJOUTS D'EVENTS
 }
 
 /// A key.
@@ -170,6 +214,46 @@ where I: Iterator<Item = Result<u8, Error>>
                                 2 => MouseButton::Right,
                                 64 => MouseButton::WheelUp,
                                 65 => MouseButton::WheelDown,
+
+                 /*       // AJOUTS D'EVENTS
+                                ///Drag
+                                32 => MouseButton::LeftDrag,
+                                33 => MouseButton::WheelDrag,
+                                34 => MouseButton::RightDrag,
+
+                                ///Shift Click
+                                4 => MouseButton::ShiftLeft,
+                                5 => MouseButton::ShiftMid,
+                                6 => MouseButton::ShiftRight,
+
+                                ///Shift Drag
+                                36 => MouseButton::ShiftLeftDrag,
+                                37 => MouseButton::ShiftMidDrag,
+                                38 => MouseButton::ShiftRightDrag,
+
+                                ///Control Click
+                                16 => MouseButton::CtrlLeft,
+                                17 => MouseButton::CtrlMid,
+                                18 => MouseButton::CtrlRight,
+
+                                ///Control Drag
+                                48 => MouseButton::CtrlLeftDrag,
+                                49 => MouseButton::CtrlMidDrag,
+                                50 => MouseButton::CtrlRightDrag,
+                                80 => MouseButton::CtrlWheelUp,
+                                81 => MouseButton::CtrlWheelDown,
+
+                                ///Control Shift Click
+                                20 => MouseButton::ShiftCtrlLeft,
+                                21 => MouseButton::ShiftCtrlMid,
+                                22 => MouseButton::ShiftCtrlRight,
+
+                                ///Control Shift Drag
+                                52 => MouseButton::ShiftCtrlLeftDrag,
+                                53 => MouseButton::ShiftCtrlMidDrag,
+                                54 => MouseButton::ShiftCtrlRightDrag,
+                        // AJOUTS D'EVENTS
+*/
                                 _ => return error,
                             };
                             Event::Mouse(match c {

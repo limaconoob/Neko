@@ -16,13 +16,8 @@ fn main()
    let len = args.len();
    if len == 1
    { exit(0); }
-//   let mut i = 1;
-//   while i < len
-//   { println!("arg[{}]::{}", i - 1, args[i]); 
-//     i+=1; }
    loop
    { let tmp = command_line(); 
-    // print!("\n\r");
      for i in tmp
      { if i == "exit"
          {return} ; }

@@ -1,7 +1,5 @@
 //! Mehr Informationen über die Termion-Bibliothek https://github.com/ticki/termion
 
-#![warn(missing_docs)]
-
 #[cfg(not(target_os = "redox"))]
 extern crate libc;
 
