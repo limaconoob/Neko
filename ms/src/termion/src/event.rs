@@ -19,77 +19,116 @@ pub enum Event {
 /// A mouse related event.
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum MouseEvent {
-    /// A mouse button was pressed.
-    /// The coordinates are one-based.
-    ///
-    /// Ein Mousetaste gedrückt ist.
+    /// A mouse button was pressed, the coordinates are one-based
+    /// Ein Mousetaste gedrückt ist
     /// Un bouton de souris est appuyé
     Press(MouseButton, u16, u16),
 
-    /// A mouse button was released.
-    /// The coordinates are one-based.
-    ///
-    /// Ein Mousetaste losgelassen ist.
+    /// A mouse button was released, the coordinates are one-based
+    /// Ein Mousetaste losgelassen ist
     /// Un bouton de souris est relâché
     Release(u16, u16),
-/*
-    /// A mouse button is held down.
-    /// The coordinates are one-based.
-    ///
-    /// Ein Mousetaste gedrückt gehalten ist.
+
+    /// A mouse button is held down, the coordinates are one-based
+    /// Ein Mousetaste gedrückt gehalten ist
     /// Un bouton de souris est maintenu appuyé
-    //Drag(MouseButton, u16, u16),
-*/}
+    Drag(MouseButton, u16, u16),
+}
 
 /// A mouse button.
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum MouseButton {
-    /// The left mouse button.
+
+    /*  ****  CLICK ONLY  ****  */
+
+    /// The left mouse button
+    /// Die Linksmousetaste
+    /// Le bouton gauche de la souris
     Left,
-    /// The right mouse button.
+
+    /// The right mouse button
+    /// Die Rechtsmousetaste
+    /// Le bouton droit de la souris
     Right,
-    /// The middle mouse button.
-    Middle,
-    /// Mouse wheel is going up.
-    ///
-    /// This event is typically only used with Mouse::Press.
+
+    /// The mouse wheel button
+    /// Das Mausradtaste
+    /// Le bouton molette de la souris
+    Wheel,
+
+    /// The mouse wheel is going up
+    /// Die Mousrad geht nach oben
+    /// La molette est tournée vers le haut
     WheelUp,
-    /// Mouse wheel is going down.
-    ///
-    /// This event is typically only used with Mouse::Press.
+
+    /// The mouse wheel is going down
+    /// Die Mouserad geht nach unten
+    /// La molette est tournée vers le bas
     WheelDown,
-    
-            // AJOUTS D'EVENTS
+
+
+    /*  **********  AJOUTS D'EVENEMENTS **********  */
+
+
+    /*  ****  DRAG ONLY  ****  */
+
+    /// The left mouse button is held while moving pointer
+    /// Die Linksmousetaste ist gehalten, wenn der Mauszeiger bewegt
+    /// Le bouton gauche est maintenu en déplaçant le pointeur
     LeftDrag,
+
+    /// The wheel mouse button is kept while moving pointer
+    /// Die Mouseradtaste ist gehalten, wenn der Mauszeiger bewegt
+    /// Le bouton molette est maintenu en déplaçant le pointeur
     WheelDrag,
+
+    /// The right mouse button is kept while moving pointer
+    /// Die Rechtsmousetaste ist gehalten, wenn der Mauszeiger bewegt
+    /// Le bouton droit est maintenu en déplaçant le pointeur
     RightDrag,
 
     ShiftLeft,
-    ShiftMid,
+
+    ShiftWheel,
+
     ShiftRight,
 
     ShiftLeftDrag,
-    ShiftMidDrag,
+
+    ShiftWheelDrag,
+
     ShiftRightDrag,
 
     CtrlLeft,
-    CtrlMid,
+
+    CtrlWheel,
+
     CtrlRight,
 
     CtrlLeftDrag,
-    CtrlMidDrag,
+
+    CtrlWheelDrag,
+
     CtrlRightDrag,
+
     CtrlWheelUp,
+
     CtrlWheelDown,
 
     ShiftCtrlLeft,
-    ShiftCtrlMid,
+
+    ShiftCtrlWheel,
+
     ShiftCtrlRight,
 
     ShiftCtrlLeftDrag,
-    ShiftCtrlMidDrag,
+
+    ShiftCtrlWheelDrag,
+
     ShiftCtrlRightDrag,
-            // AJOUTS D'EVENTS
+
+
+    /*  **********  AJOUTS D'EVENEMENTS **********  */
 }
 
 /// A key.
@@ -181,7 +220,7 @@ where I: Iterator<Item = Result<u8, Error>>
                                     if cb & 0x40 != 0 {
                                         MouseEvent::Press(MouseButton::WheelDown, cx, cy)
                                     } else {
-                                        MouseEvent::Press(MouseButton::Middle, cx, cy)
+                                        MouseEvent::Press(MouseButton::Wheel, cx, cy)
                                     }
                                 }
                                 2 => MouseEvent::Press(MouseButton::Right, cx, cy),
@@ -209,58 +248,73 @@ where I: Iterator<Item = Result<u8, Error>>
                             let cy = nums.next().unwrap().parse::<u16>().unwrap();
 
                             let button = match cb {
+
+                                ///Click
                                 0 => MouseButton::Left,
-                                1 => MouseButton::Middle,
+                                1 => MouseButton::Wheel,
                                 2 => MouseButton::Right,
                                 64 => MouseButton::WheelUp,
                                 65 => MouseButton::WheelDown,
 
-                 /*       // AJOUTS D'EVENTS
+                            /*  **********  AJOUTS D'EVENEMENTS **********  */
+
                                 ///Drag
-                                32 => MouseButton::LeftDrag,
-                                33 => MouseButton::WheelDrag,
-                                34 => MouseButton::RightDrag,
+                                32 =>
+                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::LeftDrag, cx, cy))) ,
+                                33 =>
+                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::WheelDrag, cx, cy))) ,
+                                34 =>
+                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::RightDrag, cx, cy))) ,
 
                                 ///Shift Click
                                 4 => MouseButton::ShiftLeft,
-                                5 => MouseButton::ShiftMid,
+                                5 => MouseButton::ShiftWheel,
                                 6 => MouseButton::ShiftRight,
 
                                 ///Shift Drag
-                                36 => MouseButton::ShiftLeftDrag,
-                                37 => MouseButton::ShiftMidDrag,
-                                38 => MouseButton::ShiftRightDrag,
+                                36 =>
+                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::ShiftLeftDrag, cx, cy))) ,
+                                37 =>
+                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::ShiftWheelDrag, cx, cy))) ,
+                                38 =>
+                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::ShiftRightDrag, cx, cy))) ,
 
                                 ///Control Click
                                 16 => MouseButton::CtrlLeft,
-                                17 => MouseButton::CtrlMid,
+                                17 => MouseButton::CtrlWheel,
                                 18 => MouseButton::CtrlRight,
-
-                                ///Control Drag
-                                48 => MouseButton::CtrlLeftDrag,
-                                49 => MouseButton::CtrlMidDrag,
-                                50 => MouseButton::CtrlRightDrag,
                                 80 => MouseButton::CtrlWheelUp,
                                 81 => MouseButton::CtrlWheelDown,
 
+                                ///Control Drag
+                                48 =>
+                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::CtrlLeftDrag, cx, cy))) ,
+                                49 =>
+                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::CtrlWheelDrag, cx, cy))) ,
+                                50 =>
+                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::CtrlRightDrag, cx, cy))) ,
+
                                 ///Control Shift Click
                                 20 => MouseButton::ShiftCtrlLeft,
-                                21 => MouseButton::ShiftCtrlMid,
+                                21 => MouseButton::ShiftCtrlWheel,
                                 22 => MouseButton::ShiftCtrlRight,
 
                                 ///Control Shift Drag
-                                52 => MouseButton::ShiftCtrlLeftDrag,
-                                53 => MouseButton::ShiftCtrlMidDrag,
-                                54 => MouseButton::ShiftCtrlRightDrag,
-                        // AJOUTS D'EVENTS
-*/
+                                52 =>
+                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::ShiftCtrlLeftDrag, cx, cy))) ,
+                                53 =>
+                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::ShiftCtrlWheelDrag, cx, cy))) ,
+                                54 =>
+                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::ShiftCtrlRightDrag, cx, cy))) ,
+
+                            /*  **********  AJOUTS D'EVENEMENTS **********  */
+
                                 _ => return error,
                             };
                             Event::Mouse(match c {
                                 b'M' => MouseEvent::Press(button, cx, cy),
                                 b'm' => MouseEvent::Release(cx, cy),
                                 _ => return error,
-
                             })
                         }
                         Some(Ok(c @ b'0'...b'9')) => {
@@ -289,7 +343,7 @@ where I: Iterator<Item = Result<u8, Error>>
 
                                     let event = match cb {
                                         32 => MouseEvent::Press(MouseButton::Left, cx, cy),
-                                        33 => MouseEvent::Press(MouseButton::Middle, cx, cy),
+                                        33 => MouseEvent::Press(MouseButton::Wheel, cx, cy),
                                         34 => MouseEvent::Press(MouseButton::Right, cx, cy),
                                         35 => MouseEvent::Release(cx, cy),
                                         96 => MouseEvent::Press(MouseButton::WheelUp, cx, cy),

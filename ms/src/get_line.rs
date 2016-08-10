@@ -69,8 +69,8 @@ impl TermInfo for Term
         else if flag == 2
         { flag = 3; }}
       Ok((x, y)) }
-      else
-      { Ok((0, 0)) }}
+    else
+    { Ok((0, 0)) }}
   fn go_to_curs(&self)
   { print!("{}", Goto(self.curs_x, self.curs_y)); }}
 
@@ -202,8 +202,8 @@ pub fn command_line() -> Vec<String>
       Event::Mouse(me) => { neko.erase();
                             match me
                             { MouseEvent::Press(_, a, b) |
-                              MouseEvent::Release(a, b) =>// |
-                          //    MouseEvent::Drag(_, a, b) =>
+                              MouseEvent::Release(a, b) |
+                              MouseEvent::Drag(_, a, b) =>
                               { neko.coord.0 = a;
                                 neko.coord.1 = b; }}}
     //  Event::Key(Key::Alt(b)) && Key::Up => print!("{}", Up(1)),
@@ -224,4 +224,7 @@ pub fn command_line() -> Vec<String>
     term.go_to_curs();
     stdout.flush().unwrap(); }
   neko.erase();
+//  print!("coord::({}, {})", neko.coord.0, neko.coord.1);
+//  if neko.coord.0 == 1
+  { print!("\r"); }
   split_spaces(ft_concat(buf)) }
