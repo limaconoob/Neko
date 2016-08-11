@@ -157,13 +157,14 @@ pub fn command_line() -> Vec<String>
   let ref mut term: Term = Term::new();
   let coord = term.cursor_position().unwrap();
   let size = (8, 5);
+//  print!("\x1B[u");
+  print!("{}{}", Right(size.0), Down(size.1));
   let ref mut neko: Neko = Neko::new(coord, size, '!', t_size);
   term.curs_x = coord.0 + size.0 + 1;
   term.curs_y = coord.1 + size.1;
   term.begin_x = coord.0 + size.0 + 1;
   term.begin_y = coord.1 + size.1;
   stdout.flush().unwrap();
-  print!("{}{}", Right(size.0), Down(size.1));
   term.go_to_curs();
   stdout.flush().unwrap();
   let mut stdout = MouseTerminal::from(stdout.into_raw_mode().unwrap());
@@ -224,7 +225,6 @@ pub fn command_line() -> Vec<String>
     term.go_to_curs();
     stdout.flush().unwrap(); }
   neko.erase();
-//  print!("coord::({}, {})", neko.coord.0, neko.coord.1);
-//  if neko.coord.0 == 1
-  { print!("\r"); }
+//  print!("\x1B[s\r{}", Right(neko.size.0));
+  print!("\r");
   split_spaces(ft_concat(buf)) }

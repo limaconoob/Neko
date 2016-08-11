@@ -8,30 +8,36 @@ use std::fmt;
 /// An event reported by the terminal.
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum Event {
-    /// A key press.
+    ///En A keyboard key press
+    ///De Eine Tastaturtaste Druck
+    ///Fr Appui d'une touche de clavier
     Key(Key),
-    /// A mouse button press, release or wheel use at specific coordinates.
+    ///En A mouse button press, release or wheel use at specific coordinates.
+    ///De Eine Mousetaste Druck
+    ///Fr Appui d'une touche de clavier
     Mouse(MouseEvent),
-    /// An event that cannot currently be evaluated.
+    ///En An event that cannot currently be evaluated.
+    ///De Eine Tastaturtaste Druck
+    ///Fr Appui d'une touche de clavier
     Unsupported,
 }
 
 /// A mouse related event.
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum MouseEvent {
-    /// A mouse button was pressed, the coordinates are one-based
-    /// Ein Mousetaste gedrückt ist
-    /// Un bouton de souris est appuyé
+    ///En A mouse button was pressed, the coordinates are one-based
+    ///De Ein Mousetaste gedrückt ist
+    ///Fr Un bouton de souris est appuyé
     Press(MouseButton, u16, u16),
 
-    /// A mouse button was released, the coordinates are one-based
-    /// Ein Mousetaste losgelassen ist
-    /// Un bouton de souris est relâché
+    ///En A mouse button was released, the coordinates are one-based
+    ///De Ein Mousetaste losgelassen ist
+    ///Fr Un bouton de souris est relâché
     Release(u16, u16),
 
-    /// A mouse button is held down, the coordinates are one-based
-    /// Ein Mousetaste gedrückt gehalten ist
-    /// Un bouton de souris est maintenu appuyé
+    ///En A mouse button is held down, the coordinates are one-based
+    ///De Ein Mousetaste gedrückt gehalten ist
+    ///Fr Un bouton de souris est maintenu appuyé
     Drag(MouseButton, u16, u16),
 }
 
@@ -41,29 +47,29 @@ pub enum MouseButton {
 
     /*  ****  CLICK ONLY  ****  */
 
-    /// The left mouse button
-    /// Die Linksmousetaste
-    /// Le bouton gauche de la souris
+    ///En The left mouse button is pressed
+    ///De Die Linksmousetaste ist gedrückt
+    ///Fr Le bouton gauche de la souris est appuyé
     Left,
 
-    /// The right mouse button
-    /// Die Rechtsmousetaste
-    /// Le bouton droit de la souris
+    ///En The right mouse button is pressed
+    ///De Die Rechtsmousetaste ist gedrückt
+    ///Fr Le bouton droit de la souris est appuyé
     Right,
 
-    /// The mouse wheel button
-    /// Das Mausradtaste
-    /// Le bouton molette de la souris
+    ///En The mouse wheel button is pressed
+    ///De Das Mausradtaste ist gedrückt
+    ///Fr Le bouton molette de la souris est appuyé
     Wheel,
 
-    /// The mouse wheel is going up
-    /// Die Mousrad geht nach oben
-    /// La molette est tournée vers le haut
+    ///En The mouse wheel is going up
+    ///De Die Mousrad geht nach oben
+    ///Fr La molette est tournée vers le haut
     WheelUp,
 
-    /// The mouse wheel is going down
-    /// Die Mouserad geht nach unten
-    /// La molette est tournée vers le bas
+    ///En The mouse wheel is going down
+    ///De Die Mouserad geht nach unten
+    ///Fr La molette est tournée vers le bas
     WheelDown,
 
 
@@ -72,59 +78,146 @@ pub enum MouseButton {
 
     /*  ****  DRAG ONLY  ****  */
 
-    /// The left mouse button is held while moving pointer
-    /// Die Linksmousetaste ist gehalten, wenn der Mauszeiger bewegt
-    /// Le bouton gauche est maintenu en déplaçant le pointeur
+    ///En The left mouse button is held while moving pointer
+    ///De Die Linksmousetaste ist gehalten, wenn der Mauszeiger bewegt
+    ///Fr Le bouton gauche de la souris est maintenu en déplaçant le pointeur
     LeftDrag,
 
-    /// The wheel mouse button is kept while moving pointer
-    /// Die Mouseradtaste ist gehalten, wenn der Mauszeiger bewegt
-    /// Le bouton molette est maintenu en déplaçant le pointeur
+    ///En The wheel mouse button is held while moving pointer
+    ///De Die Mouseradtaste ist gehalten, wenn der Mauszeiger bewegt
+    ///Fr Le bouton molette est maintenu en déplaçant le pointeur
     WheelDrag,
 
-    /// The right mouse button is kept while moving pointer
-    /// Die Rechtsmousetaste ist gehalten, wenn der Mauszeiger bewegt
-    /// Le bouton droit est maintenu en déplaçant le pointeur
+    ///En The right mouse button is held while moving pointer
+    ///De Die Rechtsmousetaste ist gehalten, wenn der Mauszeiger bewegt
+    ///Fr Le bouton droit de la souris est maintenu en déplaçant le pointeur
     RightDrag,
 
+    /*  ****  SHIFT CLICK  ****  */
+
+    ///En The left mouse button is pressed while helding Shift
+    ///De Die Linksmousetaste ist gedrückt, wenn Shift gehalten ist
+    ///Fr Le bouton gauche de la souris est appuyé quand Shift est maintenu
     ShiftLeft,
 
+    ///En The wheel mouse button is pressed while helding Shift
+    ///De Die Mouseradtaste ist gedrückt, wenn Shift gehalten ist
+    ///Fr Le bouton molette est appuyé quand Shift est maintenu
     ShiftWheel,
 
+    ///En The right mouse button is pressed while helding Shift
+    ///De Die Rechtsmousetaste ist gedrückt, wenn Shift gehalten ist
+    ///Fr Le bouton droit de la souris est appuyé quand Shift est maintenu
     ShiftRight,
 
+    /*  *****  SHIFT DRAG   *****  */
+
+    ///En The left mouse button and Shift are held while moving pointer
+    ///De Die Linksmousetaste und Shift sind gehalten, wenn der Mauszeiger
+    ///De    bewegt
+    ///Fr Le bouton gauche de la souris et Shift sont maintenus en déplaçant
+    ///Fr    le pointeur
     ShiftLeftDrag,
 
+    ///En The wheel mouse button and Shift are held while moving pointer
+    ///De Die Mouseradtaste und Shift sind gehalten, wenn der Mauszeiger bewegt
+    ///Fr Le bouton molette et Shift sont maintenus en déplaçant le pointeur
     ShiftWheelDrag,
 
+    ///En The right mouse button and Shift are held while moving pointer
+    ///De Die Rechtsmousetaste und Shift sind gehalten, wenn der Mauszeiger 
+    ///De    bewegt
+    ///Fr Le bouton droit de la souris et Shift sont maintenu en déplaçant
+    ///Fr    le pointeur
     ShiftRightDrag,
 
+    /*  ****  CTRL CLICK  ****  */
+
+    ///En The left mouse button is pressed while helding Ctrl
+    ///De Die Linksmousetaste ist gedrückt, wenn Ctrl gehalten ist
+    ///Fr Le bouton gauche de la souris est appuyé quand Ctrl est maintenu
     CtrlLeft,
 
+    ///En The wheel mouse button is pressed while helding Ctrl
+    ///De Die Mouseradtaste ist gedrückt, wenn Ctrl gehalten ist
+    ///Fr Le bouton molette est appuyé quand Ctrl est maintenu
     CtrlWheel,
 
+    ///En The right mouse button is pressed while helding Ctrl 
+    ///De Die Rechtsmousetaste ist gedrückt, wenn Ctrl gehalten ist
+    ///Fr Le bouton droit de la souris est appuyé quand Ctrl est maintenu
     CtrlRight,
 
-    CtrlLeftDrag,
-
-    CtrlWheelDrag,
-
-    CtrlRightDrag,
-
+    ///En The mouse wheel is going up while helding Ctrl 
+    ///De Die Mousrad geht nach oben, wenn Ctrl gehalten ist
+    ///Fr La molette est tournée vers le haut quand Ctrl est maintenu
     CtrlWheelUp,
 
+    ///En The mouse wheel is going down while helding Ctrl 
+    ///De Die Mousrad geht nach unten, wenn Ctrl gehalten ist
+    ///Fr La molette est tournée vers le bas quand Ctrl est maintenu
     CtrlWheelDown,
 
+    /*  *****  CTRL DRAG  *****  */
+
+    ///En The left mouse button and Ctrl are held while moving pointer
+    ///De Die Linksmousetaste und Ctrl sind gehalten, wenn der Mauszeiger bewegt
+    ///Fr Le bouton gauche de la souris et Ctrl sont maintenus en déplaçant
+    ///Fr    le pointeur
+    CtrlLeftDrag,
+
+    ///En The wheel mouse button and Ctrl are held while moving pointer
+    ///De Die Mouseradtaste und Ctrl sind gehalten, wenn der Mauszeiger bewegt
+    ///Fr Le bouton molette et Ctrl sont maintenus en déplaçant le pointeur
+    CtrlWheelDrag,
+
+    ///En The right mouse button and Ctrl are held while moving pointer
+    ///De Die Rechtsmousetaste und Ctrl sind gehalten, wenn der Mauszeiger
+    ///De    bewegt
+    ///Fr Le bouton droit de la souris et Ctrl sont maintenu en déplaçant
+    ///Fr    le pointeur
+    CtrlRightDrag,
+
+    /*  ** CTRL SHIFT CLICK **  */
+
+    ///En The left mouse button is pressed while Ctrl and Shift are held
+    ///De Die Linksmousetaste ist gedrückt, wenn Ctrl und Shift gehalten sind
+    ///Fr Le bouton gauche de la souris est appuyé quand Ctrl et Shift
+    ///Fr    sont maintenus
     ShiftCtrlLeft,
 
+    ///En The wheel mouse button is pressed while Ctrl and Shift are held
+    ///De Die Mouseradtaste ist gedrückt, wenn Ctrl und Shift gehalten sind
+    ///Fr Le bouton molette est appuyé quand Ctrl et Shift sont maintenus
     ShiftCtrlWheel,
 
+    ///En The right mouse button is pressed while Ctrl and Shift are held
+    ///De Die Rechtsmousetaste ist gedrückt, wenn Ctrl und Shift gehalten sind
+    ///Fr Le bouton droit de la souris est appuyé quand Ctrl et Shift
+    ///Fr    sont maintenus
     ShiftCtrlRight,
 
+    /*  *** CTRL SHIFT DRAG ***  */
+
+    ///En The left mouse button, Ctrl and Shift are held while moving pointer
+    ///De Die Linksmousetaste, Ctrl und Shift sind gehalten, wenn der
+    ///De    Mauszeiger bewegt
+    ///Fr Le bouton gauche de la souris, Ctrl et Shift sont maintenus 
+    ///Fr    en déplaçant le pointeur
     ShiftCtrlLeftDrag,
 
+    ///En The wheel mouse button, Ctrl and Shift are held while moving pointer
+    ///De Die Mouseradtaste, Ctrl und Shift sind gehalten, wenn der
+    ///De    Mauszeiger bewegt
+    ///Fr Le bouton molette, Ctrl et Shift sont maintenus en déplaçant 
+    ///Fr    le pointeur
     ShiftCtrlWheelDrag,
 
+    ///En The right mouse button, Ctrl and Shift are held while moving pointer
+    ///De Die Rechtsmousetaste, Ctrl und Shift sind gehalten, wenn der
+    ///De    Mauszeiger bewegt
+    ///Fr Le bouton droit de la souris, Ctrl et Shift sont maintenu en déplaçant
+    ///Fr    le pointeur
     ShiftCtrlRightDrag,
 
 
@@ -259,12 +352,9 @@ where I: Iterator<Item = Result<u8, Error>>
                             /*  **********  AJOUTS D'EVENEMENTS **********  */
 
                                 ///Drag
-                                32 =>
-                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::LeftDrag, cx, cy))) ,
-                                33 =>
-                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::WheelDrag, cx, cy))) ,
-                                34 =>
-                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::RightDrag, cx, cy))) ,
+                                32 => return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::LeftDrag, cx, cy))) ,
+                                33 => return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::WheelDrag, cx, cy))) ,
+                                34 => return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::RightDrag, cx, cy))) ,
 
                                 ///Shift Click
                                 4 => MouseButton::ShiftLeft,
@@ -272,12 +362,9 @@ where I: Iterator<Item = Result<u8, Error>>
                                 6 => MouseButton::ShiftRight,
 
                                 ///Shift Drag
-                                36 =>
-                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::ShiftLeftDrag, cx, cy))) ,
-                                37 =>
-                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::ShiftWheelDrag, cx, cy))) ,
-                                38 =>
-                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::ShiftRightDrag, cx, cy))) ,
+                                36 => return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::ShiftLeftDrag, cx, cy))) ,
+                                37 => return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::ShiftWheelDrag, cx, cy))) ,
+                                38 => return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::ShiftRightDrag, cx, cy))) ,
 
                                 ///Control Click
                                 16 => MouseButton::CtrlLeft,
@@ -287,12 +374,9 @@ where I: Iterator<Item = Result<u8, Error>>
                                 81 => MouseButton::CtrlWheelDown,
 
                                 ///Control Drag
-                                48 =>
-                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::CtrlLeftDrag, cx, cy))) ,
-                                49 =>
-                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::CtrlWheelDrag, cx, cy))) ,
-                                50 =>
-                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::CtrlRightDrag, cx, cy))) ,
+                                48 => return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::CtrlLeftDrag, cx, cy))) ,
+                                49 => return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::CtrlWheelDrag, cx, cy))) ,
+                                50 => return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::CtrlRightDrag, cx, cy))) ,
 
                                 ///Control Shift Click
                                 20 => MouseButton::ShiftCtrlLeft,
@@ -300,12 +384,9 @@ where I: Iterator<Item = Result<u8, Error>>
                                 22 => MouseButton::ShiftCtrlRight,
 
                                 ///Control Shift Drag
-                                52 =>
-                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::ShiftCtrlLeftDrag, cx, cy))) ,
-                                53 =>
-                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::ShiftCtrlWheelDrag, cx, cy))) ,
-                                54 =>
-                                        return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::ShiftCtrlRightDrag, cx, cy))) ,
+                                52 => return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::ShiftCtrlLeftDrag, cx, cy))) ,
+                                53 => return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::ShiftCtrlWheelDrag, cx, cy))) ,
+                                54 => return Ok(Event::Mouse(MouseEvent::Drag(MouseButton::ShiftCtrlRightDrag, cx, cy))) ,
 
                             /*  **********  AJOUTS D'EVENEMENTS **********  */
 
