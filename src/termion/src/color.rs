@@ -54,9 +54,15 @@ pub struct AnsiValue(pub u8);
 impl AnsiValue {
     /// 216-color (r, g, b ≤ 5) RGB.
     pub fn rgb(r: u8, g: u8, b: u8) -> AnsiValue {
-        debug_assert!(r <= 5, "Red color fragment (r = {}) is out of bound. Make sure r ≤ 5.", r);
-        debug_assert!(g <= 5, "Green color fragment (g = {}) is out of bound. Make sure g ≤ 5.", g);
-        debug_assert!(b <= 5, "Blue color fragment (b = {}) is out of bound. Make sure b ≤ 5.", b);
+        debug_assert!(r <= 5,
+                      "Red color fragment (r = {}) is out of bound. Make sure r ≤ 5.",
+                      r);
+        debug_assert!(g <= 5,
+                      "Green color fragment (g = {}) is out of bound. Make sure g ≤ 5.",
+                      g);
+        debug_assert!(b <= 5,
+                      "Blue color fragment (b = {}) is out of bound. Make sure b ≤ 5.",
+                      b);
 
         AnsiValue(16 + 36 * r + 6 * g + b)
     }
@@ -66,8 +72,9 @@ impl AnsiValue {
     /// There are 24 shades of gray.
     pub fn grayscale(shade: u8) -> AnsiValue {
         // Unfortunately, there are a little less than fifty shades.
-        debug_assert!(shade < 24, "Grayscale out of bound (shade = {}). There are only 24 shades of \
-                      gray.", shade);
+        debug_assert!(shade < 24,
+                      "Grayscale out of bound (shade = {}). There are only 24 shades of gray.",
+                      shade);
 
         AnsiValue(0xE8 + shade)
     }
