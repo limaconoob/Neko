@@ -1,7 +1,9 @@
-use ::pty_shell::{winsize, PtyShell, PtyHandler};
-use ::std::collections::VecDeque;
+use ::pty_shell::{winsize, PtyHandler};
 
-struct Page {
+use ::std::collections::VecDeque;
+use ::std::str;
+
+pub struct Page {
   lines: VecDeque<Vec<u8>>,
   size: winsize::Winsize,
 }
@@ -22,12 +24,21 @@ impl Page {
   }
 }
 
+impl Default for Page {
+  fn default() -> Page {
+    Page::new(1024)
+  }
+}
+
 impl PtyHandler for Page {
   fn input(&mut self, input: &[u8]) {
-    self.push(input.to_vec());
+      if input == [46] {
+          print!("hello");
+      }
   }
 
   fn output(&mut self, output: &[u8]) {
+ //   println!("{}", str::from_utf8(&output).unwrap() );
     self.push(output.to_vec());
   }
 

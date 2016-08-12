@@ -1,0 +1,17 @@
+# This file describe the command line interface options
+name: Neko
+version: 0.1
+about: Is a UNIX prompt
+author: Jeremy PEPIN <jpepin@student.42.fr>, adjivas <adjivas@users.noreply.github.com>
+
+args:
+    - limit:
+        help: Defines the limit of historic.
+        short: l
+        long: limit
+        takes_value: true
+    - shell:
+        help: Defines the interpretor shell.
+        short: s
+        long: shell
+        takes_value: true
