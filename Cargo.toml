@@ -1,10 +1,19 @@
 [package]
 name = "ms"
 version = "0.1.0"
-authors = ["Jeremy PEPIN <jpepin@student.42.fr>"]
+authors = [
+  "Jeremy PEPIN <jpepin@student.42.fr>",
+  "adjivas <adjivas@users.noreply.github.com>",
+]
 
 [target.'cfg(not(target_os = "redox"))'.dependencies]
 libc = "0.2.8"
 
 [dependencies.termion]
 path = "src/termion"
+
+[dependencies.pty]
+version = '0.1.6'
+
+[dependencies.pty-shell]
+git = "https://github.com/adjivas/pty-shell.git"

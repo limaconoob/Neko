@@ -9,7 +9,7 @@ use termion::raw::IntoRawMode;
 use termion::terminal_size;
 use parse::{split_spaces, ft_concat};
 
-trait Bonjour {
+trait Bonjour { // Non
     fn curs_pos(&mut self) -> io::Result<Option<String>>;
     fn read_pos<W: Write>(&mut self, writer: &mut W) -> io::Result<Option<String>> {
         let _raw = try!(writer.into_raw_mode());

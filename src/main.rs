@@ -7,7 +7,7 @@ use ms::get_line::command_line;
 // { if flag == 0
 // { panic!("Brauch Argumente!") }
 // else if flag == 1
-// { panic!("Connard") }
+// { panic!("Coin coin") }
 // panic!("") }
 //
 // { let args: Vec<_> = env::args().collect();
