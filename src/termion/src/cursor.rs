@@ -16,9 +16,7 @@ derive_csi_sequence!("Show the cursor.", Show, "?25h");
 pub struct Goto(pub u16, pub u16);
 
 impl Default for Goto {
-    fn default() -> Goto {
-        Goto(1, 1)
-    }
+    fn default() -> Goto { Goto(1, 1) }
 }
 
 impl fmt::Display for Goto {

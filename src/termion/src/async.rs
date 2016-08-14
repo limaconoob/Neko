@@ -22,7 +22,9 @@ pub fn async_stdin() -> AsyncReader {
         }
     });
 
-    AsyncReader { recv: recv }
+    AsyncReader {
+        recv: recv,
+    }
 }
 
 /// An asynchronous reader.
@@ -50,7 +52,7 @@ impl Read for AsyncReader {
                     if total == buf.len() {
                         break;
                     }
-                }
+                },
                 Ok(Err(e)) => return Err(e),
                 Err(_) => break,
             }

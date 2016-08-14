@@ -69,10 +69,14 @@ pub trait TermRead {
 
 impl<R: Read> TermRead for R {
     fn events(self) -> Events<io::Bytes<R>> {
-        Events { bytes: self.bytes() }
+        Events {
+            bytes: self.bytes(),
+        }
     }
     fn keys(self) -> Keys<io::Bytes<R>> {
-        Keys { iter: self.events() }
+        Keys {
+            iter: self.events(),
+        }
     }
 
     fn read_line(&mut self) -> io::Result<Option<String>> {
@@ -82,16 +86,13 @@ impl<R: Read> TermRead for R {
             match c {
                 Err(e) => return Err(e),
                 Ok(0) | Ok(3) | Ok(4) => return Ok(None),
-                Ok(0x7f) => {
-                    buf.pop();
-                }
+                Ok(0x7f) => { buf.pop(); },
                 Ok(b'\n') | Ok(b'\r') => break,
                 Ok(c) => buf.push(c),
             }
         }
 
-        let string = try!(String::from_utf8(buf)
-            .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e)));
+        let string = try!(String::from_utf8(buf).map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e)));
         Ok(Some(string))
     }
 }
@@ -168,24 +169,18 @@ mod test {
     #[test]
     fn test_events() {
         let mut i = b"\x1B[\x00bc\x7F\x1B[D\
-                    \x1B[M\x00\x22\x24\x1B[<0;2;4;M\x1B[32;2;4M\x1B[<0;2;4;m\x1B[35;2;4Mb"
-            .events();
+                    \x1B[M\x00\x22\x24\x1B[<0;2;4;M\x1B[32;2;4M\x1B[<0;2;4;m\x1B[35;2;4Mb".events();
 
         assert_eq!(i.next().unwrap().unwrap(), Event::Unsupported);
         assert_eq!(i.next().unwrap().unwrap(), Event::Key(Key::Char('b')));
         assert_eq!(i.next().unwrap().unwrap(), Event::Key(Key::Char('c')));
         assert_eq!(i.next().unwrap().unwrap(), Event::Key(Key::Backspace));
         assert_eq!(i.next().unwrap().unwrap(), Event::Key(Key::Left));
-        assert_eq!(i.next().unwrap().unwrap(),
-                   Event::Mouse(MouseEvent::Press(MouseButton::WheelUp, 2, 4)));
-        assert_eq!(i.next().unwrap().unwrap(),
-                   Event::Mouse(MouseEvent::Press(MouseButton::Left, 2, 4)));
-        assert_eq!(i.next().unwrap().unwrap(),
-                   Event::Mouse(MouseEvent::Press(MouseButton::Left, 2, 4)));
-        assert_eq!(i.next().unwrap().unwrap(),
-                   Event::Mouse(MouseEvent::Release(2, 4)));
-        assert_eq!(i.next().unwrap().unwrap(),
-                   Event::Mouse(MouseEvent::Release(2, 4)));
+        assert_eq!(i.next().unwrap().unwrap(), Event::Mouse(MouseEvent::Press(MouseButton::WheelUp, 2, 4)));
+        assert_eq!(i.next().unwrap().unwrap(), Event::Mouse(MouseEvent::Press(MouseButton::Left, 2, 4)));
+        assert_eq!(i.next().unwrap().unwrap(), Event::Mouse(MouseEvent::Press(MouseButton::Left, 2, 4)));
+        assert_eq!(i.next().unwrap().unwrap(), Event::Mouse(MouseEvent::Release(2, 4)));
+        assert_eq!(i.next().unwrap().unwrap(), Event::Mouse(MouseEvent::Release(2, 4)));
         assert_eq!(i.next().unwrap().unwrap(), Event::Key(Key::Char('b')));
         assert!(i.next().is_none());
     }
@@ -193,14 +188,13 @@ mod test {
     #[test]
     fn test_function_keys() {
         let mut st = b"\x1BOP\x1BOQ\x1BOR\x1BOS".keys();
-        for i in 1..5 {
+        for i in 1 .. 5 {
             assert_eq!(st.next().unwrap().unwrap(), Key::F(i));
         }
 
         let mut st = b"\x1B[11~\x1B[12~\x1B[13~\x1B[14~\x1B[15~\
-        \x1B[17~\x1B[18~\x1B[19~\x1B[20~\x1B[21~\x1B[23~\x1B[24~"
-            .keys();
-        for i in 1..13 {
+        \x1B[17~\x1B[18~\x1B[19~\x1B[20~\x1B[21~\x1B[23~\x1B[24~".keys();
+        for i in 1 .. 13 {
             assert_eq!(st.next().unwrap().unwrap(), Key::F(i));
         }
     }
@@ -247,18 +241,14 @@ mod test {
 
     #[test]
     fn test_backspace() {
-        line_match("this is the\x7f first\x7f\x7f test",
-                   Some("this is th fir test"));
-        line_match("this is the seco\x7fnd test\x7f",
-                   Some("this is the secnd tes"));
+        line_match("this is the\x7f first\x7f\x7f test", Some("this is th fir test"));
+        line_match("this is the seco\x7fnd test\x7f", Some("this is the secnd tes"));
     }
 
     #[test]
     fn test_end() {
-        line_match("abc\nhttps://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                   Some("abc"));
-        line_match("hello\rhttps://www.youtube.com/watch?v=yPYZpwSpKmA",
-                   Some("hello"));
+        line_match("abc\nhttps://www.youtube.com/watch?v=dQw4w9WgXcQ", Some("abc"));
+        line_match("hello\rhttps://www.youtube.com/watch?v=yPYZpwSpKmA", Some("hello"));
     }
 
     #[test]

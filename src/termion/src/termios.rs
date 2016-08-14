@@ -9,7 +9,7 @@ pub const TIOCGWINSZ: usize = 0x00005413;
 #[cfg(target_os = "macos")]
 pub const TIOCGWINSZ: usize = 0x40087468;
 
-extern "C" {
+extern {
     pub fn tcgetattr(fd: c_int, termptr: *mut Termios) -> c_int;
     pub fn tcsetattr(fd: c_int, opt: c_int, termptr: *mut Termios) -> c_int;
     pub fn cfmakeraw(termptr: *mut Termios);
@@ -24,7 +24,9 @@ pub fn get_terminal_attr() -> (Termios, c_int) {
 }
 
 pub fn set_terminal_attr(ios: *mut Termios) -> c_int {
-    unsafe { tcsetattr(0, 0, ios) }
+    unsafe {
+        tcsetattr(0, 0, ios)
+    }
 }
 
 #[cfg(test)]

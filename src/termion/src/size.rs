@@ -50,12 +50,8 @@ pub fn terminal_size() -> io::Result<(u16, u16)> {
 pub fn terminal_size() -> io::Result<(u16, u16)> {
     use std::env;
 
-    let width = try!(env::var("COLUMNS").map_err(|x| io::Error::new(io::ErrorKind::NotFound, x)))
-        .parse()
-        .unwrap_or(0);
-    let height = try!(env::var("LINES").map_err(|x| io::Error::new(io::ErrorKind::NotFound, x)))
-        .parse()
-        .unwrap_or(0);
+    let width = try!(env::var("COLUMNS").map_err(|x| io::Error::new(io::ErrorKind::NotFound, x))).parse().unwrap_or(0);
+    let height = try!(env::var("LINES").map_err(|x| io::Error::new(io::ErrorKind::NotFound, x))).parse().unwrap_or(0);
 
     Ok((width, height))
 }
