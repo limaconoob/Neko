@@ -32,21 +32,21 @@ pub struct Neko
   pub term: (u16, u16), }
 
 pub trait NekoInfo
-{ fn display(&self);
+{ fn display(&self, the: &mut Term);
   fn switch(&mut self);
-  fn erase(&self); }
+  fn erase(&self, the: &mut Term); }
 
 impl Neko
 { pub fn new(coord: (u16, u16), size: (u16, u16), the: &mut Term, term: (u16, u16)) -> Self
   { let mut i = 0;
     while i < size.1 && coord.1 + i < term.1
     { print!("{}", Goto(coord.0, coord.1 + i + 1));
-      i += 1;
       let mut j = 0;
       while j < size.0 && j + coord.0 <= term.0
-      { the.matrix[i as usize][j as usize] = 4;
+      { the.matrix[(i + coord.1) as usize][(j + coord.0 - 1) as usize] = 4;
         j += 1;
-        print!("{}", '!'); }}
+        print!("{}", '!'); }
+      i += 1; }
     Neko
     { coord: coord,
       size: size,
@@ -57,36 +57,36 @@ impl Neko
       term: term, }}}
 
 impl NekoInfo for Neko
-{ fn display(&self)
+{ fn display(&self, the: &mut Term)
   { let mut i = 0;
     while i < self.size.1 && self.coord.1 + i < self.term.1
     { print!("{}", Goto(self.coord.0, self.coord.1 + i + 1));
-      i += 1;
       let mut j = 0;
       while j < self.size.0 && j + self.coord.0 <= self.term.0
-      { j += 1;
-        print!("{}", self.tmp_char as char); }}
+      { the.matrix[(i + self.coord.1) as usize][(j + self.coord.0 - 1) as usize] = 4;
+        j += 1;
+        print!("{}", self.tmp_char as char); }
+      i += 1; }
     print!("{}{}", Goto(self.coord.0 + self.coord_exe.0, self.coord.1 + self.coord_exe.1), self.char_exe); }
   fn switch(&mut self)
   { if self.tmp_char <= 126
     { self.tmp_char += 1; }
     else
     { self.tmp_char = 33; }}
-  fn erase(&self)
+  fn erase(&self, the: &mut Term)
   { let mut i = 0;
-    print!("{}", Goto(self.coord.0, self.coord.1 + 1));
-    let mut eraser: String = String::with_capacity(self.size.0 as usize);
-    while i < self.size.0
-    { i += 1;
-      eraser.push(' '); }
-      i = 0;
-      while i < self.size.1 && self.coord.1 + i < self.term.1
-      { print!("{}", Goto(self.coord.0, self.coord.1 + i + 1));
-        i += 1;
-        print!("{}{}", eraser, Down(1)); }
-        if self.coord.1 + self.size.1 == self.term.1
-        { println!(""); }
-        print!("{}", Up(self.size.1)); }}
+    while i < self.size.1 && self.coord.1 + i < self.term.1
+    { print!("{}", Goto(self.coord.0, self.coord.1 + i + 1));
+      let mut j = 0;
+      while j < self.size.0 && j + self.coord.0 <= self.term.0
+      { the.matrix[(i + self.coord.1) as usize][(j + self.coord.0 - 1) as usize] = 0;
+        print!(" "); 
+        j += 1;}
+      i += 1;
+      print!("{}", Down(1)); }
+    if self.coord.1 + self.size.1 == self.term.1
+    { println!(""); }
+    print!("{}", Up(self.size.1)); }}
 
 pub struct Term
 { pub matrix: Vec<Vec<u8>>,

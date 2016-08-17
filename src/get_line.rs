@@ -28,7 +28,7 @@ pub fn command_line(neko: &mut Neko, term: &mut Term) -> Vec<String>
   let stdin = stdin();
 //  print!("\x1B[u");
 //  print!("{}{}", Right(neko.size.0), Down(neko.size.1));
-  neko.display();
+  neko.display(term);
   stdout.flush().unwrap();
   term.go_to_curs();
   stdout.flush().unwrap();
@@ -41,9 +41,10 @@ pub fn command_line(neko: &mut Neko, term: &mut Term) -> Vec<String>
     match b
     { Event::Key(Key::Char('\n')) => break,
       Event::Key(Key::Char('\0')) => break,
-      Event::Key(Key::Char(b)) => { term.curs_x += 1;
-                          size += 1;
+      Event::Key(Key::Char(b)) => { size += 1;
                           buf.push(b);
+                          term.matrix[term.curs_y as usize - 1][term.curs_x as usize - 1] = b as u8;
+                          term.curs_x += 1;
                           print!("{}", b) },
       Event::Key(Key::Left) => if term.curs_x > term.begin_x
                         { term.curs_x -= 1;
@@ -65,7 +66,7 @@ pub fn command_line(neko: &mut Neko, term: &mut Term) -> Vec<String>
                           print!(" ");
                           move_to((taille as i16) * -1);
                           move_it(0) },
-      Event::Mouse(me) => { neko.erase();
+      Event::Mouse(me) => { neko.erase(term);
                             match me
                             { MouseEvent::Press(_, a, b) =>
                               { if a >= neko.coord.0 && a <= neko.coord.0 + neko.size.0 && b > neko.coord.1 && b <= neko.coord.1 + neko.size.1
@@ -74,7 +75,8 @@ pub fn command_line(neko: &mut Neko, term: &mut Term) -> Vec<String>
                               { if a >= neko.coord.0 && a <= neko.coord.0 + neko.size.0 && b > neko.coord.1 && b <= neko.coord.1 + neko.size.1
                               { print!("NEKORelease"); }}
                               MouseEvent::Drag(MouseButton::ShiftLeftDrag, a, b) =>
-                              { neko.coord.0 = a;
+                              { 
+                                neko.coord.0 = a;
                                 neko.coord.1 = b - 1; }
                               _ => {}, }}
     //  Event::Key(Key::Alt(b)) && Key::Up => print!("{}", Up(1)),
@@ -87,19 +89,25 @@ pub fn command_line(neko: &mut Neko, term: &mut Term) -> Vec<String>
                           size += 1;
                           buf.push(b);
                           print!("*{}", b) },
+      Event::Key(Key::Up) => 
+      {  for k in term.matrix.clone()
+        { print!("[");
+            for u in k
+                  { print!("{}, ", u); }
+                      println!("]"); } },
     //  Event::Key(Key::Up) => get_history(3),
     //  Event::Key(Key::Down) => get_history(4),
       _ => {}, };
     neko.switch();
-    neko.display();
+    neko.display(term);
     term.go_to_curs();
     stdout.flush().unwrap(); }
   print!("\n\r");
   let coord = term.cursor_position().unwrap();
-  term.curs_x = coord.0 + 1;
+  term.curs_x = coord.0;
   term.curs_y = coord.1;
-  term.begin_x = coord.0 + 1;
+  term.begin_x = coord.0;
   term.begin_y = coord.1;
-  neko.erase();
+  neko.erase(term);
 //  print!("\x1B[s\r{}", Right(neko.size.0));
   split_spaces(ft_concat(buf)) }
