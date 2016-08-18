@@ -35,9 +35,11 @@ pub fn command_line(neko: &mut Neko, term: &mut Term) -> Vec<String>
   let mut stdout = MouseTerminal::from(stdout.into_raw_mode().unwrap());
   let mut buf: Vec<char> = Vec::new();
   let mut size = 0;
+  let mut flag;
   for c in stdin.events()
   { let b = c.unwrap();
     neko.event = b;
+    flag = 0;
     match b
     { Event::Key(Key::Char('\n')) => break,
       Event::Key(Key::Char('\0')) => break,
@@ -66,16 +68,16 @@ pub fn command_line(neko: &mut Neko, term: &mut Term) -> Vec<String>
                           print!(" ");
                           move_to((taille as i16) * -1);
                           move_it(0) },
-      Event::Mouse(me) => { neko.erase(term);
-                            match me
+      Event::Mouse(me) => { match me
                             { MouseEvent::Press(_, a, b) =>
                               { if a >= neko.coord.0 && a <= neko.coord.0 + neko.size.0 && b > neko.coord.1 && b <= neko.coord.1 + neko.size.1
-                              { print!("NEKOPress  "); }}
+                              { /*print!("NEKOPress  ");*/ }}
                               MouseEvent::Release(a, b) =>
                               { if a >= neko.coord.0 && a <= neko.coord.0 + neko.size.0 && b > neko.coord.1 && b <= neko.coord.1 + neko.size.1
-                              { print!("NEKORelease"); }}
+                              { /*print!("NEKORelease");*/ }}
                               MouseEvent::Drag(MouseButton::ShiftLeftDrag, a, b) =>
-                              { 
+                              { neko.erase(term);
+                                flag = 1;
                                 neko.coord.0 = a;
                                 neko.coord.1 = b - 1; }
                               _ => {}, }}
@@ -98,6 +100,8 @@ pub fn command_line(neko: &mut Neko, term: &mut Term) -> Vec<String>
     //  Event::Key(Key::Up) => get_history(3),
     //  Event::Key(Key::Down) => get_history(4),
       _ => {}, };
+    if flag == 0
+    { neko.erase(term); }
     neko.switch();
     neko.display(term);
     term.go_to_curs();

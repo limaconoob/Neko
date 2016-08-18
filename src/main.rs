@@ -41,17 +41,17 @@ fn main()
       j += 1; }
     term.matrix.push(coucou); 
     i += 1; }
-  let ref mut neko: Neko = Neko::new(coord, size, term, t_size);
+  let ref mut neko: Neko = Neko::new(coord, size, t_size);
 /*  for k in term.matrix.clone()
   { print!("[");
     for u in k
     { print!("{}, ", u); }
     println!("]"); } */
   let coord = term.cursor_position().unwrap();
-  term.curs_x = coord.0 + 1;
-  term.curs_y = coord.1;
-  term.begin_x = coord.0 + 1;
-  term.begin_y = coord.1;
+  term.curs_x = 1;
+  term.curs_y = coord.1 + 1;
+  term.begin_x = 1;
+  term.begin_y = coord.1 + 1;
   stdout.flush().unwrap();
   loop
   { let tmp = command_line(neko, term); 

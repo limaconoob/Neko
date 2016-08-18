@@ -37,16 +37,8 @@ pub trait NekoInfo
   fn erase(&self, the: &mut Term); }
 
 impl Neko
-{ pub fn new(coord: (u16, u16), size: (u16, u16), the: &mut Term, term: (u16, u16)) -> Self
-  { let mut i = 0;
-    while i < size.1 && coord.1 + i < term.1
-    { print!("{}", Goto(coord.0, coord.1 + i + 1));
-      let mut j = 0;
-      while j < size.0 && j + coord.0 <= term.0
-      { the.matrix[(i + coord.1) as usize][(j + coord.0 - 1) as usize] = 4;
-        j += 1;
-        print!("{}", '!'); }
-      i += 1; }
+{ pub fn new(coord: (u16, u16), size: (u16, u16), term: (u16, u16)) -> Self
+  { print!("{}", Goto(coord.0 + size.0, coord.1 + size.1));
     Neko
     { coord: coord,
       size: size,
@@ -63,9 +55,20 @@ impl NekoInfo for Neko
     { print!("{}", Goto(self.coord.0, self.coord.1 + i + 1));
       let mut j = 0;
       while j < self.size.0 && j + self.coord.0 <= self.term.0
-      { the.matrix[(i + self.coord.1) as usize][(j + self.coord.0 - 1) as usize] = 4;
+      { the.matrix[(i + self.coord.1) as usize].insert((self.coord.0 - 1) as usize, 4);
+        the.matrix[(i + self.coord.1) as usize].pop();
         j += 1;
         print!("{}", self.tmp_char as char); }
+      j = 0;
+      print!("{}", Goto(j, self.coord.1 + i + 1));
+      while j < self.coord.0 - 1
+      { print!("{}", the.matrix[(i + self.coord.1) as usize][j as usize] as char);
+        j += 1; }
+      j = self.coord.0 + self.size.0 - 1;
+      print!("{}", Goto(j + 1, self.coord.1 + i + 1));
+      while j < self.term.0
+      { print!("{}", the.matrix[(i + self.coord.1) as usize][j as usize] as char);
+        j += 1; }
       i += 1; }
     print!("{}{}", Goto(self.coord.0 + self.coord_exe.0, self.coord.1 + self.coord_exe.1), self.char_exe); }
   fn switch(&mut self)
@@ -79,9 +82,17 @@ impl NekoInfo for Neko
     { print!("{}", Goto(self.coord.0, self.coord.1 + i + 1));
       let mut j = 0;
       while j < self.size.0 && j + self.coord.0 <= self.term.0
-      { the.matrix[(i + self.coord.1) as usize][(j + self.coord.0 - 1) as usize] = 0;
+      { the.matrix[(i + self.coord.1) as usize].remove((self.coord.0 - 1) as usize);
+        the.matrix[(i + self.coord.1) as usize].push(0);
         print!(" "); 
-        j += 1;}
+        j += 1; }
+      j = 0;
+      print!("{}", Goto(j, self.coord.1 + i + 1));
+      while j < self.term.0
+      { print!("{}", the.matrix[(i + self.coord.1) as usize][j as usize] as char);
+        if the.matrix[(i + self.coord.1) as usize][j as usize] == 0
+        { print!(" "); }
+        j += 1; }
       i += 1;
       print!("{}", Down(1)); }
     if self.coord.1 + self.size.1 == self.term.1
