@@ -1,10 +1,30 @@
 [package]
-name = "ms"
-version = "0.1.0"
-authors = ["Jeremy PEPIN <jpepin@student.42.fr>"]
+name = "neko"
+version = "0.0.1"
+authors = [
+	"adjivas <adjivas@users.noreply.github.com>",
+	"brezaire <voncay@users.noreply.github.com>",
+	"flime <LinFeiLong@users.noreply.github.com>",
+	"jpepin <limaconoob@users.noreply.github.com>"
+]
 
-[target.'cfg(not(target_os = "redox"))'.dependencies]
-libc = "0.2.8"
+[features]
+default       = []
+lints         = ["clippy", "nightly"]
+nightly       = [] # for building with nightly and unstable features
+unstable      = [] # for building with unstable features on stable Rust
+debug         = [] # for building with debug messages
+travis        = ["lints", "nightly"] # for building with travis-cargo
 
-[dependencies.termion]
-path = "src/termion"
+[dependencies.pty]
+git           = "https://github.com/adjivas/pty-rs.git"
+
+[dependencies.chan]
+version       = "0.1.18"
+
+[dependencies.libc]
+version       = "*"
+
+[dependencies.clippy]
+version       = "*"
+optional      = true
