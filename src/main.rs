@@ -12,9 +12,9 @@ use std::ffi::CString;
 use std::{ptr, thread};
 
 fn main() {
-  let mut fork = Fork::from_ptmx().unwrap();
+  let fork = Fork::from_ptmx().unwrap();
 
-  if let Some(ref mut master) = fork.is_father().ok() {
+  if let Some(mut master) = fork.is_father().ok() {
     let (tx1, rx1) = chan::sync(0);
     let (tx2, rx2) = chan::sync(0);
 
@@ -33,7 +33,7 @@ fn main() {
 
         tx2.send((bytes, read));
       }
-    });/*
+    });
     loop {
       chan_select! {
         rx1.recv() -> val => {
@@ -49,12 +49,12 @@ fn main() {
             master.write(b"echo nop\n").unwrap();
           }
           else {
-            master.write(&bytes[..read]).unwrap();
+          master.write(&bytes[..read]).unwrap();
           }
           master.flush().unwrap();
         }
       }
-    }*/
+    }
   }
   else {
     let mut ptrs = [CString::new("bash").unwrap().as_ptr(), ptr::null()];
