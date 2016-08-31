@@ -22,7 +22,7 @@ git           = "https://github.com/adjivas/pty-rs.git"
 [dependencies.chan]
 version       = "0.1.18"
 
-[dependencies.termios]
+[dependencies.termion]
 version       = "*"
 
 [dependencies.libc]
