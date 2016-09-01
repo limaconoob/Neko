@@ -8,6 +8,7 @@ use std::thread;
 pub type Out = ([u8; 4096], usize);
 pub type In = ([u8; 1], usize);
 
+
 pub struct Io {
   master: pty::Master,
   rx_in: chan::Receiver<In>,
@@ -20,6 +21,7 @@ impl Io {
     rx_in: chan::Receiver<In>,
     rx_out: chan::Receiver<Out>,
   ) -> Self {
+    ::terminal::setup_terminal(master);
     Io {
       master: master,
       rx_in: rx_in,
@@ -53,22 +55,37 @@ impl Io {
 }
 
 impl Iterator for Io {
-  type Item = (In, Out);
+  type Item = (Option<u8>, Option<Out>);
 
-  fn next(&mut self) -> Option<(In, Out)> {
-    match self.rx_in.iter().zip(&self.rx_out)
-                           .next() {
-      None => unimplemented!(),
-      Some(((_, in_len), _)) if in_len == 0 => None,
-      io => {
-        if let Some(((in_buf, in_len), (out_buf, out_len))) = io {
-          self.master.write(&out_buf[..out_len]).unwrap();
-          io
-        }
-        else {
-          unimplemented!()
+  fn next(&mut self) -> Option<(Option<u8>, Option<Out>)> {
+    let ref recv_rx_in: chan::Receiver<([u8; 1], usize)> = self.rx_in;
+    let ref recv_rx_out: chan::Receiver<([u8; 4096], usize)> = self.rx_out;
+    let (mut rx_in, mut rx_out): (Option<In>, Option<Out>) = (None, None);
+
+    chan_select! {
+      recv_rx_out.recv() -> val => {
+        if let Some((bytes, nread)) = val {
+          if nread.checked_neg().is_none() {
+            rx_out = Some((bytes, nread));
+            ::std::io::stdout().write(&bytes[..nread]).unwrap();
+            ::std::io::stdout().flush().unwrap();
+          }
         }
       },
+      recv_rx_in.recv() -> val => {
+        if let Some((bytes, nread)) = val {
+          rx_in = Some((bytes, nread));
+
+          self.master.write(&bytes[..nread]).unwrap();
+          self.master.flush().unwrap();
+        }
+      },
+    };
+    match (rx_in, rx_out) {
+      (None, None) => None,
+      (None, r_out) => Some((None, r_out)),
+      (Some((key, 1)), r_out) => Some((Some(key[0]), r_out)),
+      _ => None,
     }
   }
 }
