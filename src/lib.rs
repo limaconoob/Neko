@@ -4,4 +4,4 @@ extern crate pty;
 extern crate libc;
 
 pub mod shell;
-pub mod fork;
+mod fork;

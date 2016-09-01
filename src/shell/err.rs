@@ -1,7 +1,7 @@
 use ::pty::prelude::ForkError;
 
-use std::fmt;
-use std::error::Error;
+//use std::fmt;
+//use std::error::Error;
 
 pub type Result<T> = ::std::result::Result<T, ShellError>;
 

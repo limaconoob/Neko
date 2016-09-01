@@ -1,6 +1,5 @@
 use ::chan;
 use ::pty::prelude as pty;
-use ::fork::Father;
 
 use std::io::{Read, Write};
 use std::io;
@@ -9,19 +8,19 @@ use std::thread;
 pub type Out = ([u8; 4096], usize);
 pub type In = ([u8; 1], usize);
 
-pub struct Receiver {
+pub struct Io {
   master: pty::Master,
   rx_in: chan::Receiver<In>,
   rx_out: chan::Receiver<Out>,
 }
 
-impl Receiver {
+impl Io {
   fn new (
     master: pty::Master,
     rx_in: chan::Receiver<In>,
     rx_out: chan::Receiver<Out>,
-  ) -> Receiver {
-    Receiver {
+  ) -> Self {
+    Io {
       master: master,
       rx_in: rx_in,
       rx_out: rx_out,
@@ -49,24 +48,27 @@ impl Receiver {
         tx_in.send((bytes, read));
       }
     });
-    Receiver::new(master, rx_in, rx_out)
+    Io::new(master, rx_in, rx_out)
   }
 }
 
-pub type Event = (Option<In>, Option<Out>);
+impl Iterator for Io {
+  type Item = (In, Out);
 
-impl Iterator for Receiver {
-  type Item = Event;
-
-  fn next(&mut self) -> Option<Event> {
-    self.rx_in.iter().zip(&self.rx_out)
-                     .map(|((in_buf, in_len), (out_buf, out_len))| {
-      io::stdout().write(&in_buf[..in_len]).unwrap();
-      io::stdout().flush().unwrap();
-
-      self.master.write(&out_buf[..out_len]).unwrap();
-      self.master.flush().unwrap();
-    });
-    None
+  fn next(&mut self) -> Option<(In, Out)> {
+    match self.rx_in.iter().zip(&self.rx_out)
+                           .next() {
+      None => unimplemented!(),
+      Some(((_, in_len), _)) if in_len == 0 => None,
+      io => {
+        if let Some(((in_buf, in_len), (out_buf, out_len))) = io {
+          self.master.write(&out_buf[..out_len]).unwrap();
+          io
+        }
+        else {
+          unimplemented!()
+        }
+      },
+    }
   }
 }
