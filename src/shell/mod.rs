@@ -1,19 +1,22 @@
 mod err;
+mod log;
 mod device;
-pub mod event;
+pub mod state;
+pub mod command;
 
 use ::std::collections::VecDeque;
 use ::std::fmt;
 use ::std::io;
-use std::io::{Read, Write};
+use ::std::io::{Read, Write};
 
 use ::pty::prelude as pty;
 use ::fork::Child;
 use ::libc;
 
 use self::device::Device;
-use self::event::Event;
-
+use self::state::State;
+use self::command::Command;
+use self::log::Log;
 pub use self::err::{ShellError, Result};
 
 /// The struct `Shell` is the speudo terminal interface.
@@ -22,8 +25,8 @@ pub struct Shell {
   pid: libc::pid_t,
   pty: pty::Fork,
   device: Device,
-  output: VecDeque<u8>,
-  input: VecDeque<Vec<u8>>,
+  log: Log,
+  line: Command,
 }
 
 impl Shell {
@@ -41,13 +44,8 @@ impl Shell {
             pid: pid,
             pty: fork,
             device: Device::from_speudo(master),
-            output: VecDeque::with_capacity(4096),
-            input: {
-              let mut input = VecDeque::with_capacity(1024);
-
-              input.push_back(Vec::with_capacity(1024));
-              input
-            },
+            log: Log::default(),
+            line: Vec::with_capacity(4096),
           })
         },
       },
@@ -56,38 +54,28 @@ impl Shell {
 }
 
 impl Iterator for Shell {
-  type Item = Option<Event>;
+  type Item = State;
 
-  fn next(&mut self) -> Option<Option<Event>> {
+  fn next(&mut self) -> Option<State> {
     match self.device.next() {
       None => None,
       Some((rx_in, rx_out)) => {
         if let Some((rx_out_buf, rx_out_len)) = rx_out {
-            if self.output.len() + rx_out_len >= self.output.capacity() {
-              for _ in 0..rx_out_len {
-                self.output.pop_front().unwrap();
-              }
-            }
-            self.output.extend(rx_out_buf[..rx_out_len].iter());
-            io::stdout().write(&rx_out_buf[..rx_out_len]).unwrap();
-            io::stdout().flush().unwrap();
+          self.log.extend(Vec::from(&rx_out_buf[..rx_out_len]));
+          io::stdout().write(&rx_out_buf[..rx_out_len]).unwrap();
+          io::stdout().flush().unwrap();
         };
         match rx_in {
-          None => Some(None),
-          Some(r_in) => {
-            let mut line: Vec<u8> = Vec::with_capacity(1024);
+          None => Some(State::default()),
+          Some(10) | Some(13) => {
+            let ll = self.line.clone();
 
-            if let Some(ref mut last) = self.input.iter_mut().last() {
-              last.push(r_in);
-              line.extend_from_slice(&last[..]);
-            }
-            if r_in != 10 && r_in != 13 {
-              Some(Some(Event::KeyDown(r_in)))
-            }
-            else {
-              self.input.push_back(Vec::with_capacity(1024));
-              Some(Some(Event::KeyDownEnterCommand(line)))
-            }
+            self.line.clear();
+            Some(State(Some(ll), Some(10)))
+          },
+          Some(key) => {
+            self.line.push(key);
+            Some(State(None, Some(key)))
           },
         }
       },
@@ -102,11 +90,5 @@ impl io::Write for Shell {
 
   fn flush(&mut self) -> io::Result<()> {
     self.device.flush()
-  }
-}
-
-impl fmt::Display for Shell {
-  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-    write!(f, "{}", String::from_utf8(Vec::from(self.output.clone())).unwrap())
   }
 }
