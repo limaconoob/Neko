@@ -68,27 +68,20 @@ impl Iterator for Device {
   fn next(&mut self) -> Option<(Option<u8>, Option<Out>)> {
     let ref input: chan::Receiver<([u8; 1], usize)> = self.input;
     let ref output: chan::Receiver<([u8; 4096], usize)> = self.output;
-    let (mut rx_in, mut rx_out): (Option<In>, Option<Out>) = (None, None);
 
     chan_select! {
       output.recv() -> val => {
-        if let Some((buf, len)) = val {
-          if len.checked_neg().is_none() {
-            rx_out = Some((buf, len));
-          }
+        return match val {
+          Some((buf, len @ 1 ... 4096)) => Some((None, Some((buf, len)))),
+          _ => None,
         }
       },
       input.recv() -> val => {
-        if let Some(read) = val {
-          rx_in = Some(read);
+        return match val {
+          Some((read, 1)) => Some((Some(read[0]), None)),
+          _ => None,
         }
       },
-    };
-    match (rx_in, rx_out) {
-      (None, None) => None,
-      (None, out) => Some((None, out)),
-      (Some((key, 1)), r_out) => Some((Some(key[0]), r_out)),
-      _ => None,
     }
   }
 }

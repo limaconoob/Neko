@@ -16,6 +16,8 @@ use self::event::Event;
 
 pub use self::err::{ShellError, Result};
 
+/// The struct `Shell` is the speudo terminal interface.
+
 pub struct Shell {
   pid: libc::pid_t,
   pty: pty::Fork,

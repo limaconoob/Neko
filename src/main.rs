@@ -11,12 +11,12 @@ fn main() {
     if let Some(event) = input {
       match event {
         shell::Event::KeyDownEnterCommand(line) => {
-          shell.write(&[10u8]);
-          shell.flush();
+          shell.write(&[10u8]).unwrap();
+          shell.flush().unwrap();
         },
         shell::Event::KeyDown(key) => {
-          shell.write(&[key]);
-          shell.flush();
+          shell.write(&[key]).unwrap();
+          shell.flush().unwrap();
         },
       }
     }
