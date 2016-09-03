@@ -1,20 +1,25 @@
 mod err;
-mod io;
+mod device;
 pub mod event;
 
 use ::std::collections::VecDeque;
 use ::std::fmt;
+use ::std::io;
+use std::io::{Read, Write};
 
 use ::pty::prelude as pty;
 use ::fork::Child;
+use ::libc;
 
-use self::io::Io;
+use self::device::Device;
 use self::event::Event;
+
 pub use self::err::{ShellError, Result};
 
 pub struct Shell {
-  io: Io,
+  pid: libc::pid_t,
   pty: pty::Fork,
+  device: Device,
   output: VecDeque<u8>,
   input: VecDeque<Vec<u8>>,
 }
@@ -29,10 +34,11 @@ impl Shell {
         pty::Fork::Child(ref slave) => {
           slave.exec(command.unwrap_or("bash"));
         },
-        pty::Fork::Father(_, master) => {
+        pty::Fork::Father(pid, master) => {
           Ok(Shell {
-            io: Io::from_master(master),
+            pid: pid,
             pty: fork,
+            device: Device::from_speudo(master),
             output: VecDeque::with_capacity(4096),
             input: {
               let mut input = VecDeque::with_capacity(1024);
@@ -51,7 +57,7 @@ impl Iterator for Shell {
   type Item = Option<Event>;
 
   fn next(&mut self) -> Option<Option<Event>> {
-    match self.io.next() {
+    match self.device.next() {
       None => None,
       Some((rx_in, rx_out)) => {
         if let Some((rx_out_buf, rx_out_len)) = rx_out {
@@ -61,6 +67,8 @@ impl Iterator for Shell {
               }
             }
             self.output.extend(rx_out_buf[..rx_out_len].iter());
+            io::stdout().write(&rx_out_buf[..rx_out_len]).unwrap();
+            io::stdout().flush().unwrap();
         };
         match rx_in {
           None => Some(None),
@@ -76,12 +84,22 @@ impl Iterator for Shell {
             }
             else {
               self.input.push_back(Vec::with_capacity(1024));
-              Some(Some(Event::Command(line)))
+              Some(Some(Event::KeyDownEnterCommand(line)))
             }
           },
         }
       },
     }
+  }
+}
+
+impl io::Write for Shell {
+  fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+    self.device.write(buf)
+  }
+
+  fn flush(&mut self) -> io::Result<()> {
+    self.device.flush()
   }
 }
 

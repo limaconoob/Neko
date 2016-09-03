@@ -2,22 +2,21 @@ extern crate neko;
 
 use neko::prelude as shell;
 
+use std::io::Write;
+
 fn main() {
   let mut shell: shell::Shell = shell::Shell::new(None).unwrap();
 
   while let Some(input) = shell.next() {
     if let Some(event) = input {
       match event {
-        shell::Event::Command(line) => {
-          println!("command: {}", String::from_utf8(line).unwrap());
+        shell::Event::KeyDownEnterCommand(line) => {
+          shell.write(&[10u8]);
+          shell.flush();
         },
         shell::Event::KeyDown(key) => {
-          if key == 27 { // Esc
-            println!("{}", shell);
-          }
-          else {
-            println!("{}", key);
-          }
+          shell.write(&[key]);
+          shell.flush();
         },
       }
     }
