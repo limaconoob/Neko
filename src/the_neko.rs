@@ -5,7 +5,7 @@ use termion::terminal_size;
 use objets::{Neko,Term,TermInfo};
 use get_line::command_line;
 
-fn the_neko(matrix: Vec<Vec<u8>>)
+pub fn the_neko(matrix: Vec<Vec<u8>>)
 { let stdout = stdout();
   let mut stdout = stdout.lock();
   let t_size = terminal_size().unwrap();
