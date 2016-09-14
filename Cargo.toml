@@ -7,4 +7,4 @@ authors = ["Jeremy PEPIN <jpepin@student.42.fr>"]
 libc = "0.2.8"
 
 [dependencies.termion]
-path = "src/termion"
+git = "https://github.com/limaconoob/termion.git"
