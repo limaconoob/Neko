@@ -1,28 +1,9 @@
-extern crate ms;
-extern crate termion;
 
 use std::io::{stdout};
 use std::io::prelude::*;
 use termion::terminal_size;
-use ms::objets::{Neko,Term,TermInfo};
-
-//use std::env;
-use ms::get_line::command_line;
-
-/*
-fn exit(flag:i8)->!
-{ if flag == 0
-  { panic!("Brauch Argumente!") }
-  else if flag == 1
-  { panic!("Connard") }
-  panic!("") }
-*/
-/*
-{ let args: Vec<_> = env::args().collect();
-   let len = args.len();
-   if len == 1
-   { exit(0); }}
-*/
+use objets::{Neko,Term,TermInfo};
+use get_line::command_line;
 
 fn the_neko(matrix: Vec<Vec<u8>>)
 { let stdout = stdout();
