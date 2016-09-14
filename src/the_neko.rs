@@ -26,8 +26,4 @@ pub fn the_neko(matrix: Vec<Vec<u8>>)
   term.begin_x = 1;
   term.begin_y = coord.1 + 1;
   stdout.flush().unwrap();
-  loop
-  { let tmp = command_line(neko, term); 
-    for i in tmp
-    { if i == "exit"
-      { return }}}}
+  command_line(neko, term); }
