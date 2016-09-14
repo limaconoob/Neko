@@ -24,7 +24,7 @@ fn exit(flag:i8)->!
    { exit(0); }}
 */
 
-fn main()
+fn the_neko(matrix: Vec<Vec<u8>>)
 { let stdout = stdout();
   let mut stdout = stdout.lock();
   let t_size = terminal_size().unwrap();
@@ -32,14 +32,7 @@ fn main()
   let coord = term.cursor_position().unwrap();
   let size = (8, 5);
   let mut i = 0;
-  while i < t_size.1
-  { let mut j = 0;
-    let mut coucou: Vec<u8> = Vec::new();
-    while j < t_size.0
-    { coucou.push(0); 
-      j += 1; }
-    term.matrix.push(coucou); 
-    i += 1; }
+  term.matrix = matrix;
   let ref mut neko: Neko = Neko::new(coord, size, t_size);
 /*  for k in term.matrix.clone()
   { print!("[");
