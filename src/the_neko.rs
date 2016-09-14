@@ -15,11 +15,11 @@ pub fn the_neko(matrix: Vec<Vec<u8>>)
   let mut i = 0;
   term.matrix = matrix;
   let ref mut neko: Neko = Neko::new(coord, size, t_size);
-/*  for k in term.matrix.clone()
+  for k in term.matrix.clone()
   { print!("[");
     for u in k
     { print!("{}, ", u); }
-    println!("]"); } */
+    println!("]"); }
   let coord = term.cursor_position().unwrap();
   term.curs_x = 1;
   term.curs_y = coord.1 + 1;
